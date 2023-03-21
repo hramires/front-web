@@ -2,11 +2,13 @@
 
 > A Vue.js project
 
-## Build Setup
+# Build Setup
 
-# pré requisitos
+## pré requisitos
 
 node versão 16.15.0
+
+## instruções para rodar o projeto
 
 ``` bash
 # instalar dependencias
@@ -21,16 +23,16 @@ npm run build
 
 Para mais informações, consultar os [docs para vue-loader](http://vuejs.github.io/vue-loader).
 
-## Desenvolvimento
+# Desenvolvimento
 
-# extensões recomendadas no VScode
+## extensões recomendadas no VScode
 
 - Vetur - suporte para Vue
 - SCSS IntelliSense - suporte pars SCSS
 - ESLint - para indicar os erros de estilo no código, possui uma configuração que corrige os erros ao salvar
 - Babel JavaScript - suporte para o JS
 
-# componentes Bootstrap
+## componentes Bootstrap
 
 https://bootstrap-vue.org/docs/components
 
