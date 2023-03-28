@@ -34,8 +34,25 @@ export default {
 
 <!-- This should be the only global CSS in the app. -->
 <style lang="scss">
-// Import Bootstrap and BootstrapVue CSS files (order is important)
-@import '../node_modules/bootstrap/dist/css/bootstrap.css';
-@import '../node_modules/bootstrap-vue/dist/bootstrap-vue.css';
+// Import custom SASS variable overrides, or alternatively
+@import './assets/css/custom.scss';
+
+// Import Bootstrap and BootstrapVue source SCSS files
+@import '../node_modules/bootstrap/scss/bootstrap.scss';
+@import '../node_modules/bootstrap-vue/src/index.scss';
+
+@font-face {
+  font-family: 'BigShoulders';
+  src: url('./assets/fonts/BigShouldersDisplay-VariableFont_wght.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'FireSans';
+  src: url('./assets/fonts/FiraSans-Regular.ttf') format('truetype');
+}
+
+body {
+  font-family: 'FireSans';
+}
 
 </style>

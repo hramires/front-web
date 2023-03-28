@@ -6,6 +6,11 @@ export default {
     BCard,
     BButton,
   },
+  data() {
+    return {
+      nome: 'nada',
+    };
+  },
   methods: {
     onClick() {
       this.$router.push({ name: 'sign-in' });
