@@ -1,7 +1,7 @@
 <script>
-import appConfig from './config/app.config.json';
-import NavBar from './components/nav-bar';
-import CustomFooter from './components/custom-footer';
+import appConfig from '@config/app.config.json';
+import NavBar from '@components/nav-bar';
+import CustomFooter from '@components/custom-footer';
 
 export default {
   name: 'app',

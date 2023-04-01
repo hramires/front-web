@@ -1,5 +1,5 @@
-import SignIn from '../views/sign-in/sign-in.vue';
-import Home from '../views/home/home.vue';
+import SignIn from '@views/sign-in/sign-in.vue';
+import Home from '@views/home/home.vue';
 
 export default [
   {
