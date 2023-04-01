@@ -32,7 +32,9 @@ export default {
 <template>
   <div id="app">
     <nav-bar />
-    <router-view :key="pathWithQueryString" />
+    <div id="container">
+      <router-view :key="pathWithQueryString" />
+    </div>
     <custom-footer />
   </div>
 </template>
@@ -61,7 +63,12 @@ body {
 }
 
 body, #app {
+  position: relative;
   min-height: 100vh;
+}
+
+#container {
+  padding-bottom: 4.5rem;
 }
 
 h1 {
