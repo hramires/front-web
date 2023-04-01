@@ -44,11 +44,3 @@ export default {
       </b-card>
     </div>
 </template>
-
-<style lang="scss" module>
-
-body {
-  padding: 10em 20em;
-}
-
-</style>

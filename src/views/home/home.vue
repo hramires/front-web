@@ -6,31 +6,25 @@ export default {
     BCard,
     BButton,
   },
-  data() {
-    return {
-      nome: 'nada',
-    };
-  },
   methods: {
-    onClick() {
-      this.$router.push({ name: 'sign-in' });
+    onClick(routeName) {
+      this.$router.push({ name: routeName });
     },
   },
 };
 </script>
 
 <template>
-    <div class="d-flex justify-content-center">
-      <b-card title="Home!!" class="m-2 p-2">
-        <b-button variant="primary" class="mt-4" @click="onClick">Sign In</b-button>
-      </b-card>
-    </div>
+  <div class="d-flex justify-content-center align-items-center pt-5">
+    <b-card class="p-2 bg-primary">
+      <b-card-body class="d-flex flex-column">
+        <b-button variant="primary" class="buttonConfirm" @click="onClick('sign-in')">
+          Login
+        </b-button>
+        <b-button variant="primary" class="mt-4 buttonConfirm" @click="onClick('sign-up')">
+          Cadastro
+        </b-button>
+      </b-card-body>
+    </b-card>
+  </div>
 </template>
-
-<style lang="scss" module>
-
-body {
-  padding: 10em;
-}
-
-</style>
