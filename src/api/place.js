@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// url de exemplo, trocar pela correta quando possível
-const PLACE_URL = 'https://exemplo.com/api/v1/sites';
+// url de teste
+const PLACE_URL = 'localhost:5050/place';
 
 /*
 Request body create and update:
