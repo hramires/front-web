@@ -1,5 +1,7 @@
 <script>
-import appConfig from './config/app.config.json';
+import appConfig from '@config/app.config.json';
+import NavBar from '@components/nav-bar';
+import CustomFooter from '@components/custom-footer';
 
 export default {
   name: 'app',
@@ -17,6 +19,7 @@ export default {
       return title ? `${title} | ${appConfig.title}` : appConfig.title;
     },
   },
+  components: { NavBar, CustomFooter },
   computed: {
     pathWithQueryString() {
       const queryString = new URLSearchParams(this.$route.query);
@@ -28,7 +31,11 @@ export default {
 
 <template>
   <div id="app">
-    <router-view :key="pathWithQueryString" />
+    <nav-bar />
+    <div id="container">
+      <router-view :key="pathWithQueryString" />
+    </div>
+    <custom-footer />
   </div>
 </template>
 
@@ -52,7 +59,27 @@ export default {
 }
 
 body {
-  font-family: 'FireSans';
+  font-family: 'FireSans' !important;
+}
+
+body, #app {
+  position: relative;
+  min-height: 100vh;
+}
+
+#container {
+  padding-bottom: 4.5rem;
+}
+
+h1 {
+  font-family: 'BigShoulders' !important;
+  font-weight: 800;
+  color: $primary;
+}
+
+.buttonConfirm {
+  background-color: $confirm;
+  color: $light;
 }
 
 </style>

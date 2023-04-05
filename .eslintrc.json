@@ -5,6 +5,7 @@
     },
     "extends": [
         "plugin:vue/vue3-essential",
+        "plugin:import/recommended",
         "airbnb-base"
     ],
     "overrides": [
@@ -17,6 +18,23 @@
         "vue"
     ],
     "rules": {
-        "vue/multi-word-component-names": 0
-    }
+        "vue/multi-word-component-names": 0,
+        "no-restricted-exports": "off"
+    },
+    "settings": {
+     "import/resolver": {
+         "alias": {
+             "map": [
+                ["@api", "./src/api"],
+                ["@assets", "./src/assets"],
+                ["@components", "./src/components"],
+                ["@config", "./src/config"],
+                ["@router", "./src/router"],
+                ["@state", "./src/state"],
+                ["@views", "./src/views"]
+             ]
+         },
+         "extensions": [".js", ".less", ".json", ".vue"]
+     }
+}
 }
