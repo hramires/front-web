@@ -11,7 +11,6 @@ export default {
     }],
   },
   components: {
-    BForm,
     BFormGroup,
     BFormInput,
     BButton,
@@ -47,6 +46,7 @@ export default {
       show: true,
       images: [
         {
+          id: 1,
           blank: true,
           blankColor: '#000',
           width: 75,
@@ -54,6 +54,7 @@ export default {
           class: 'm1',
         },
         {
+          id: 2,
           blank: true,
           blankColor: '#777',
           width: 75,
@@ -61,6 +62,7 @@ export default {
           class: 'm1',
         },
         {
+          id: 3,
           blank: true,
           blankColor: 'blue',
           width: 75,
@@ -68,22 +70,25 @@ export default {
           class: 'm1',
         },
         {
+          id: 4,
           blank: true,
-          blankColor: '#777',
+          blankColor: 'red',
           width: 75,
           height: 75,
           class: 'm1',
         },
         {
+          id: 5,
           blank: true,
-          blankColor: '#777',
+          blankColor: 'green',
           width: 75,
           height: 75,
           class: 'm1',
         },
         {
+          id: 6,
           blank: true,
-          blankColor: '#777',
+          blankColor: 'yellow',
           width: 75,
           height: 75,
           class: 'm1',
@@ -102,7 +107,6 @@ export default {
       </h2>
     </div>
     <div class="border border-primary" :class="$style.border">
-      <b-form @submit="onSubmit">
         <b-row :class="$style.row">
           <b-col>
             <b-form-group
@@ -169,7 +173,7 @@ export default {
               ></b-form-textarea>
             </b-form-group>
             <label>Principais Categorias</label>
-            <b-table striped hover :items="items"></b-table>
+            <b-table :class="$style.table" striped hover :items="items"></b-table>
           </b-col>
           <b-col>
             <b-form-group
@@ -178,23 +182,74 @@ export default {
               label-for="Fotos"
               description=""
             >
-<!--              <b-row  v-for="image in Math.ceil(images.length / 4)">-->
-<!--                <b-img-->
-<!--                  v-for="image in images.slice((image - 1) * 4, image * 4)"-->
-<!--                  v-bind="image"-->
-<!--                  rounded alt="images">-->
-<!--                </b-img>-->
-<!--              </b-row>-->
+              <b-row>
+                <b-col md="7">
+                    <b-img
+                      v-for="image in images"
+                      :key="image.id"
+                      :class="`${image.class}  ${$style.image}`"
+                      :blank-color="image.blankColor"
+                      :blank="image.blank"
+                      :width="image.width"
+                      :height="image.height"
+                      rounded alt="images">
+                    </b-img>
+                </b-col>
+              </b-row>
             </b-form-group>
+
+            <b-form-group
+              id="region"
+              label="Região"
+              label-for="Region"
+              description=""
+            >
+              <b-form-input
+                id="region-input"
+                v-model="form.region"
+                :class="$style.textInput"
+                type="text"
+                placeholder="Região A"
+                required
+              ></b-form-input>
+            </b-form-group>
+
+            <b-form-group
+              id="location"
+              label="Localização"
+              label-for="location"
+              description=""
+            >
+              <b-form-input
+                id="location-input"
+                v-model="form.location"
+                :class="$style.textInput"
+                type="text"
+                placeholder="Endereço"
+                required
+              ></b-form-input>
+            </b-form-group>
+
+            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d59911088.758287504!2d-118.4678619!3d-23.5798381!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce5708390fdc71%3A0xadf189f6de334c8b!2sEmbed%20Produ%C3%A7%C3%A3o%20Digital!5e0!3m2!1sen!2sbr!4v1680735578276!5m2!1sen!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
           </b-col>
         </b-row>
-
-        <b-button type="submit" variant="primary">Submit</b-button>
-      </b-form>
     </div>
+
+    <b-row :class="$style.buttons">
+      <b-col md="6" offset-md="10" >
+        <b-button type="submit" variant="primary"  @click="onSubmit($event)">Salvar</b-button>
+        <b-button type="reset" variant="danger">Excluir</b-button>
+      </b-col>
+    </b-row>
+
   </div>
 </template>
 
+<style>
+.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
+  background-color: #9DCC9A;
+}
+</style>
 <style type="scss" module>
 .title {
   font-family: "BigShoulders";
@@ -202,6 +257,19 @@ export default {
   margin-left: 8rem;
   margin-top: 4rem;
   font-weight: 900;
+}
+
+.buttons {
+  margin-right: 1em;
+  margin-bottom: 0.75em;
+}
+
+.table {
+  color: #152536;
+}
+
+.image {
+  margin: 0.3rem 0.3rem;
 }
 
 .textInput {
@@ -228,9 +296,10 @@ export default {
 }
 
 label {
-  font-family: "BigShoulders";
+  font-family: "FireSans";
   font-size: 1.75rem;
   font-weight: 600;
-  color: #024053
+  color: #024053;
+  line-height: 2rem;
 }
 </style>
