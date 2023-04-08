@@ -21,3 +21,7 @@ export const getters = {
     return state.viewport === state.expandedNavbarBreakpoint || state.viewport === 'xl';
   },
 };
+
+export const mutations = {};
+
+export const actions = {};

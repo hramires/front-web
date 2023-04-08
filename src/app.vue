@@ -77,6 +77,10 @@ h1 {
   color: $primary;
 }
 
+.btn-outline-primary{
+  background-color: $light;
+}
+
 .buttonConfirm {
   background-color: $confirm;
   color: $light;
