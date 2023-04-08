@@ -1,28 +1,17 @@
 <script>
 import {
-  BForm, BFormGroup, BFormInput, BButton,
+  BFormGroup, BFormInput, BButton, BDropdown,
 } from 'bootstrap-vue';
 
 export default {
   page: {
-    meta: [{
-      name: 'description',
-      content: 'Sign In',
-    }],
+    meta: [{ name: 'description', content: 'Cadastro Local' }],
   },
   components: {
     BFormGroup,
     BFormInput,
     BButton,
-  },
-  methods: {
-    onSubmit() {
-      console.log('submit');
-      alert(JSON.stringify(this.form));
-    },
-    goBack() {
-      this.$router.push({ name: 'home' });
-    },
+    BDropdown,
   },
   data() {
     return {
@@ -32,15 +21,16 @@ export default {
         contact: '',
         schedule: '',
         categories: [],
+        selectedCategories: [],
       },
-      items: [
+      categories: [
         {
           id: '1',
-          categoria: 'Exemplo Categoria',
+          name: 'Exemplo Categoria',
         },
         {
           id: '2',
-          categoria: 'Exemplo Categoria 2',
+          name: 'Exemplo Categoria 2',
         },
       ],
       show: true,
@@ -49,64 +39,32 @@ export default {
           id: 1,
           blank: true,
           blankColor: '#000',
-          width: 75,
-          height: 75,
-          class: 'm1',
-        },
-        {
-          id: 2,
-          blank: true,
-          blankColor: '#777',
-          width: 75,
-          height: 75,
-          class: 'm1',
-        },
-        {
-          id: 3,
-          blank: true,
-          blankColor: 'blue',
-          width: 75,
-          height: 75,
-          class: 'm1',
-        },
-        {
-          id: 4,
-          blank: true,
-          blankColor: 'red',
-          width: 75,
-          height: 75,
-          class: 'm1',
-        },
-        {
-          id: 5,
-          blank: true,
-          blankColor: 'green',
-          width: 75,
-          height: 75,
-          class: 'm1',
-        },
-        {
-          id: 6,
-          blank: true,
-          blankColor: 'yellow',
-          width: 75,
-          height: 75,
-          class: 'm1',
+          src: '',
         },
       ],
     };
+  },
+  methods: {
+    onSubmit() {
+      console.log('submit');
+      alert(JSON.stringify(this.form));
+    },
+    goBack() {
+      this.$router.push({ name: 'home' });
+    },
+    selectCategory(value) {
+      console.log(value);
+    },
   },
 };
 </script>
 
 <template>
   <div>
-    <div>
-      <h2 class="text-primary" :class="$style.title">
-        PAINEL DE CADASTRO - LOCAL
-      </h2>
-    </div>
-    <div class="border border-primary" :class="$style.border">
+    <h1 class="text-primary title">
+      PAINEL DE CADASTRO - LOCAL
+    </h1>
+    <div class="border border-primary">
         <b-row :class="$style.row">
           <b-col>
             <b-form-group
@@ -117,7 +75,7 @@ export default {
             >
               <b-form-input
                 id="name"
-                :class="$style.textInput"
+                class="textInput"
                 v-model="form.name"
                 type="text"
                 placeholder="Novo Local"
@@ -133,7 +91,7 @@ export default {
             >
               <b-form-textarea
                 id="description"
-                :class="$style.textArea"
+                class="textArea"
                 v-model="form.description"
                 placeholder="Descrição única do local"
                 rows="3"
@@ -150,7 +108,7 @@ export default {
               <b-form-input
                 id="contact"
                 v-model="form.contact"
-                :class="$style.textInput"
+                class="textInput"
                 type="text"
                 placeholder="+55 (51) 99999-9999"
                 required
@@ -165,7 +123,7 @@ export default {
             >
               <b-form-textarea
                 id="schedule"
-                :class="$style.textArea"
+                class="textArea"
                 v-model="form.schedule"
                 placeholder="Horários"
                 rows="3"
@@ -173,7 +131,21 @@ export default {
               ></b-form-textarea>
             </b-form-group>
             <label>Principais Categorias</label>
-            <b-table :class="$style.table" striped hover :items="items"></b-table>
+            <div>
+              <b-dropdown
+                id="categories"
+                text="Selecione a categoria"
+                block
+                split
+                split-variant="outline-primary"
+                @click="selectCategory(value)"
+              >
+                <b-dropdown-item v-for="category in categories" :key="category.id">{{
+                  category.name
+                }}</b-dropdown-item>
+              </b-dropdown>
+              <b-table class="table" striped hover :items="selectedCategories"></b-table>
+            </div>
           </b-col>
           <b-col>
             <b-form-group
@@ -182,19 +154,20 @@ export default {
               label-for="Fotos"
               description=""
             >
-              <b-row>
-                <b-col md="7">
-                    <b-img
-                      v-for="image in images"
-                      :key="image.id"
-                      :class="`${image.class}  ${$style.image}`"
-                      :blank-color="image.blankColor"
-                      :blank="image.blank"
-                      :width="image.width"
-                      :height="image.height"
-                      rounded alt="images">
-                    </b-img>
-                </b-col>
+              <b-row :class="$style.images">
+                <b-img
+                    v-for="image in images"
+                    :key="image.id"
+                    class="image rounded-lg m1"
+                    :blank="image.blank"
+                    :blankColor="image.blanckColor"
+                    rounded alt="images">
+                </b-img>
+                <div
+                    v-for="i in 7"
+                    :key="i"
+                    class="image rounded m1">
+                </div>
               </b-row>
             </b-form-group>
 
@@ -207,7 +180,7 @@ export default {
               <b-form-input
                 id="region-input"
                 v-model="form.region"
-                :class="$style.textInput"
+                class="textInput"
                 type="text"
                 placeholder="Região A"
                 required
@@ -223,7 +196,7 @@ export default {
               <b-form-input
                 id="location-input"
                 v-model="form.location"
-                :class="$style.textInput"
+                class="textInput"
                 type="text"
                 placeholder="Endereço"
                 required
@@ -235,7 +208,7 @@ export default {
         </b-row>
     </div>
 
-    <b-row :class="$style.buttons">
+    <b-row class="buttons">
       <b-col md="6" offset-md="10" >
         <b-button type="submit" variant="primary"  @click="onSubmit($event)">Salvar</b-button>
         <b-button type="reset" variant="danger">Excluir</b-button>
@@ -245,61 +218,12 @@ export default {
   </div>
 </template>
 
-<style>
-.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
-  background-color: #9DCC9A;
-}
-</style>
 <style type="scss" module>
-.title {
-  font-family: "BigShoulders";
-  font-size: 3rem;
-  margin-left: 8rem;
-  margin-top: 4rem;
-  font-weight: 900;
-}
-
-.buttons {
-  margin-right: 1em;
-  margin-bottom: 0.75em;
-}
-
-.table {
-  color: #152536;
-}
-
-.image {
-  margin: 0.3rem 0.3rem;
-}
-
-.textInput {
-  background-color: #F8F9FA;
-  border-radius: 0.25rem;
-  border: aliceblue;
-}
-
-.textArea {
-  background-color: #F8F9FA;
-  border-radius: 0.25rem;
-  border: aliceblue;
-  overflow-y: hidden !important;
-}
-
-.border {
-  margin: 1rem 8rem;
-  border-radius: 0.75rem;
-  border-color: #9DCC9A !important;
-}
-
 .row {
   padding: 1.4rem 1.75rem;
 }
 
-label {
-  font-family: "FireSans";
-  font-size: 1.75rem;
-  font-weight: 600;
-  color: #024053;
-  line-height: 2rem;
+.images {
+  padding: 0 1rem;
 }
 </style>

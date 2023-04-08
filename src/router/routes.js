@@ -1,5 +1,6 @@
 import SignIn from '@views/sign-in/sign-in.vue';
-import RegisterEnterprise from '@views/registries/register-enterprise.vue';
+import CreatePlace from '@views/place/create-place.vue';
+import Place from '@views/place/place.vue';
 import Home from '@views/home/home.vue';
 
 export default [
@@ -17,11 +18,19 @@ export default [
     component: SignIn,
   },
   {
+    path: '/local/:id',
+    name: 'local',
+    meta: {
+      titleKey: 'Local',
+    },
+    component: Place,
+  },
+  {
     path: '/cadastro-local',
     name: 'cadastro-local',
     meta: {
       titleKey: 'Cadastro Local',
     },
-    component: RegisterEnterprise,
+    component: CreatePlace,
   },
 ];

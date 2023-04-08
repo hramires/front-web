@@ -37,7 +37,7 @@ export default {
     },
     shouldShowButtons() {
       // check if user is logged in
-      return true;
+      return this.$route.name !== 'sign-in';
     },
   },
   methods: {
