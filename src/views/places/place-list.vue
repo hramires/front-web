@@ -101,7 +101,7 @@ import {
 
 <style type="scss" module>
 .title{
-    margin-left: 13rem;
+    margin-left: 13.8rem;
     margin-top: 4rem;
     font-size: 2.5em;
 }
