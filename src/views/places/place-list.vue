@@ -1,6 +1,6 @@
 <script>
 import {
-  BCard, BForm, BFormGroup, BFormInput, BButton,
+  BCard, BButton,
 } from 'bootstrap-vue';
 </script>
 
@@ -94,6 +94,7 @@ import {
         </b-col>
       </b-row>
     </b-container>
+    <button :class="$style.floatButton" >+</button>
   </div>
 </template>
 
@@ -105,6 +106,7 @@ import {
     font-size: 2.5em;
 }
 .card1{
+  border-radius: 20px;
   margin-left: 1rem;
   margin-top: 2rem;
   width: 20rem;
@@ -119,5 +121,19 @@ import {
 .updated{
   margin-top: 2rem;
   font-size: 0.7em;
+}
+.floatButton{
+  border-radius: 50%;
+  width: 75px;
+  height: 75px;
+  border: #9DCC9A;
+  background: #9DCC9A;
+  position: fixed;
+	float: bottom;
+	bottom: 100px;
+	right: 50px;
+	z-index: 100;
+  color:white;
+  font-size: 40px;
 }
 </style>
