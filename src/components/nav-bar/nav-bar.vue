@@ -54,7 +54,7 @@ export default {
         <b-avatar size="8rem" :src="require('../../assets/images/logo.png')"/>
       </b-navbar-brand>
 
-      <div v-if="shouldShowButtons" class="d-flex pt-4 mr-6">
+      <div v-if="shouldShowButtons" :class="$style.buttonGroup" class="d-flex pt-4">
         <b-button
           v-for="button in buttons"
           :key="button.routeName"
@@ -73,6 +73,10 @@ export default {
 .logoImage {
   position: absolute;
   top: .5rem;
+}
+
+.buttonGroup {
+  margin-left: 10rem;
 }
 
 </style>

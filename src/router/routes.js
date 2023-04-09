@@ -1,7 +1,7 @@
 import SignIn from '@views/sign-in/sign-in.vue';
 import Home from '@views/home/home.vue';
 import PlaceList from '@views/places/place-list.vue';
-import Category from '@views/category/category.vue'
+import Category from '@views/category/category.vue';
 
 export default [
   {
