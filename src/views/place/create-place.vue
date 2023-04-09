@@ -2,6 +2,7 @@
 import {
   BFormGroup, BFormInput, BButton, BDropdown,
 } from 'bootstrap-vue';
+import GoogleMap from '@components/google-map';
 
 export default {
   page: {
@@ -12,6 +13,7 @@ export default {
     BFormInput,
     BButton,
     BDropdown,
+    GoogleMap,
   },
   data() {
     return {
@@ -163,7 +165,7 @@ export default {
                   @click="selectCategory(category.id)"
                 >{{  category.name }}</b-dropdown-item>
               </b-dropdown>
-              <b-table class="table" striped hover :items="selectedCategories"></b-table>
+              <b-table class="table mt-2" striped hover :items="selectedCategories"></b-table>
             </div>
           </b-col>
           <b-col>
@@ -228,7 +230,7 @@ export default {
               ></b-form-input>
             </b-form-group>
 
-            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d59911088.758287504!2d-118.4678619!3d-23.5798381!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce5708390fdc71%3A0xadf189f6de334c8b!2sEmbed%20Produ%C3%A7%C3%A3o%20Digital!5e0!3m2!1sen!2sbr!4v1680735578276!5m2!1sen!2sbr" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <google-map is-add-new-marker/>
 
             <div class="d-flex justify-content-end mt-3">
               <b-button variant="danger">Excluir Local</b-button>
