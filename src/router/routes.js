@@ -1,26 +1,36 @@
 import SignIn from '@views/sign-in/sign-in.vue';
 import Home from '@views/home/home.vue';
-import PlaceCategory from '@views/place-category/place-category.vue'
+import PlaceList from '@views/places/place-list.vue';
+import Category from '@views/category/category.vue'
+
 export default [
   {
     path: '/',
-    name: 'place-category',
-    component: PlaceCategory,
+    name: 'home',
+    component: Home,
   },
-  // {
-  //   path: '/sign-in',
-  //   name: 'sign-in',
-  //   meta: {
-  //     titleKey: 'Sign In',
-  //   },
-  //   component: SignIn,
-  // },
   {
-    path: '/place-category',
-    name: 'place-category',
+    path: '/sign-in',
+    name: 'sign-in',
     meta: {
-      titleKey: 'Place Category',
+      titleKey: 'Sign In',
     },
-    component: PlaceCategory,
+    component: SignIn,
+  },
+  {
+    path: '/listar-local',
+    name: 'listar-local',
+    meta: {
+      titleKey: 'Listar Local',
+    },
+    component: PlaceList,
+  },
+  {
+    path: '/categoria',
+    name: 'categoria',
+    meta: {
+      titleKey: 'Categoria',
+    },
+    component: Category,
   },
 ];
