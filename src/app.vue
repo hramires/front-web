@@ -140,37 +140,4 @@ label {
   background-color: $green;
 }
 
-.autocomplete-form {
-  margin: {
-    top: 25px;
-    left: 15px;
-    right: 15px;
-  }
-
-  &-input-elements {
-    display: flex;
-  flex-flow: column nowrap;
-  justify-content:center;
-  align-items: center;
-  }
-
-  &-items {
-  position: absolute;
-  width: inherit;
-    border: {
-      width:1px;
-      style:solid;
-      color: $light-grey;
-
-    }
-  }
-
-  input {
-    margin-bottom: 1px;
-  }
-  .hide {
-    display: none;
-  }
-}
-
 </style>
