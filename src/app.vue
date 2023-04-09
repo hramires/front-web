@@ -68,7 +68,8 @@ body, #app {
 }
 
 #container {
-  padding-bottom: 4.5rem;
+  padding: 2rem 8rem;
+  padding-bottom: 6rem;
 }
 
 h1 {
@@ -77,9 +78,71 @@ h1 {
   color: $primary;
 }
 
+.label {
+  font-size: 16px;
+  color: $primary;
+}
+
+.formLabel {
+  font-family: "FireSans";
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: $primary;
+  line-height: 2rem;
+}
+
+.title {
+  font-family: "BigShoulders";
+  font-size: 3rem;
+  font-weight: 900;
+}
+
+.btn-outline-primary {
+  background-color: $light;
+}
+
 .buttonConfirm {
   background-color: $confirm;
   color: $light;
+}
+
+.table-striped thead, .table-striped > tbody > tr > td, .table-striped > tbody > tr > th {
+  background-color: $grey;
+}
+
+.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
+  background-color: $green;
+}
+
+.table {
+  color: $dark;
+}
+
+.textInput {
+  background-color: $grey;
+  border-radius: 0.25rem;
+  border: $grey;
+}
+
+.textArea {
+  background-color: $grey;
+  border-radius: 0.25rem;
+  border: $grey;
+  overflow-y: hidden !important;
+}
+
+.border {
+  border-radius: 0.75rem;
+  border-color: $secondary !important;
+}
+
+.image {
+  margin: 0.3rem 0.3rem;
+  width: 8rem;
+  min-width: 8rem;
+  height: 8rem;
+  min-height: 8rem;
+  background-color: $green;
 }
 
 </style>

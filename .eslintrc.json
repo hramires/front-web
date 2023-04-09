@@ -33,7 +33,8 @@
                 ["@config", "./src/config"],
                 ["@router", "./src/router"],
                 ["@state", "./src/state"],
-                ["@views", "./src/views"]
+                ["@views", "./src/views"],
+                ["@utils", "./src/utils"]
              ]
          },
          "extensions": [".js", ".less", ".json", ".vue"]
