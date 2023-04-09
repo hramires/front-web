@@ -2,6 +2,7 @@ import SignIn from '@views/sign-in/sign-in.vue';
 import CreatePlace from '@views/place/create-place.vue';
 import Place from '@views/place/place.vue';
 import Home from '@views/home/home.vue';
+import PlaceList from '@views/places/place-list.vue';
 
 export default [
   {
@@ -32,5 +33,13 @@ export default [
       titleKey: 'Cadastro Local',
     },
     component: CreatePlace,
+  },
+  {
+    path: '/listar-local',
+    name: 'listar-local',
+    meta: {
+      titleKey: 'Listar Local',
+    },
+    component: PlaceList,
   },
 ];
