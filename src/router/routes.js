@@ -1,8 +1,9 @@
+import Home from '@views/home/home.vue';
 import SignIn from '@views/sign-in/sign-in.vue';
 import CreatePlace from '@views/place/create-place.vue';
 import Place from '@views/place/place.vue';
-import Home from '@views/home/home.vue';
-import PlaceList from '@views/places/place-list.vue';
+import ListPlace from '@views/place/list-place.vue';
+import Category from '@views/category/category.vue';
 
 export default [
   {
@@ -38,8 +39,16 @@ export default [
     path: '/listar-local',
     name: 'listar-local',
     meta: {
-      titleKey: 'Listar Local',
+      titleKey: 'Listar Locais',
     },
-    component: PlaceList,
+    component: ListPlace,
+  },
+  {
+    path: '/categoria',
+    name: 'categoria',
+    meta: {
+      titleKey: 'Categoria',
+    },
+    component: Category,
   },
 ];

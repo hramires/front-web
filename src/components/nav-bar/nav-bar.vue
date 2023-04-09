@@ -15,7 +15,7 @@ export default {
       return [
         {
           name: 'Locais',
-          routeName: 'cadastro-local',
+          routeName: 'listar-local',
         },
         {
           name: 'Categorias',
