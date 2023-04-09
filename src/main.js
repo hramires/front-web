@@ -3,6 +3,7 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 import { sync } from 'vuex-router-sync';
 import store from '@state/store';
 import * as VueGoogleMaps from 'vue2-google-maps';
+import { GOOGLE_API_KEY } from '@config/google';
 import router from './router';
 import App from './app.vue';
 
@@ -12,7 +13,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 // AIzaSyDPMSn3lspQqrfT-LyMj1sGprarZZCezUQ - maps api key
 Vue.use(VueGoogleMaps, {
   load: {
-    key: 'AIzaSyDPMSn3lspQqrfT-LyMj1sGprarZZCezUQ',
+    key: GOOGLE_API_KEY,
     libraries: 'places', // This is required if you use the Autocomplete plugin
     // OR: libraries: 'places,drawing'
     // OR: libraries: 'places,drawing,visualization'

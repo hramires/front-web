@@ -21,8 +21,10 @@ export default {
       description: '',
       contact: '',
       schedule: '',
+      appointment: false,
       region: '',
-      location: '',
+      lat: null,
+      lng: null,
       selectedCategories: [],
       categories: [
         {
@@ -47,7 +49,7 @@ export default {
       show: true,
       images: [
         {
-          id: 'img-1',
+          id: '1',
           blank: true,
           blankColor: '#000',
           src: '',
@@ -74,6 +76,10 @@ export default {
       const selectedRegion = this.regions.find((r) => r.id === value);
       this.region = selectedRegion;
     },
+    updateLatLng(lat, lng) {
+      this.lat = lat;
+      this.lng = lng;
+    },
   },
 };
 </script>
@@ -92,6 +98,7 @@ export default {
               label="Nome do Local"
               label-for="name"
               description=""
+              class="formLabel"
             >
               <b-form-input
                 id="name"
@@ -108,6 +115,7 @@ export default {
               label="Descrição"
               label-for="description"
               description=""
+              class="formLabel"
             >
               <b-form-textarea
                 id="description"
@@ -124,6 +132,7 @@ export default {
               label="Contato"
               label-for="contact"
               description=""
+              class="formLabel"
             >
               <b-form-input
                 id="contact"
@@ -140,6 +149,7 @@ export default {
               label="Horário de Funcionamento"
               label-for="schedule"
               description=""
+              class="formLabel"
             >
               <b-form-textarea
                 id="schedule"
@@ -150,7 +160,17 @@ export default {
                 max-rows="6"
               ></b-form-textarea>
             </b-form-group>
-            <label>Principais Categorias</label>
+
+            <b-form-checkbox
+              id="appointment"
+              v-model="appointment"
+              name="appointment"
+              class="label mb-3 d-flex align-items-center"
+            >
+              Precisa marcar horário
+            </b-form-checkbox>
+
+            <label class="formLabel">Principais Categorias</label>
             <div>
               <b-dropdown
                 id="categories"
@@ -174,6 +194,7 @@ export default {
               label="Fotos"
               label-for="Fotos"
               description=""
+              class="formLabel"
             >
               <b-row :class="$style.images">
                 <b-img
@@ -185,7 +206,7 @@ export default {
                     rounded alt="images">
                 </b-img>
                 <div
-                    v-for="i in (2,7)"
+                    v-for="i in [2,3,4,5,6,7]"
                     :key="`image-${i}`"
                     class="image rounded m1">
                 </div>
@@ -197,6 +218,7 @@ export default {
               label="Região"
               label-for="Region"
               description=""
+              class="formLabel"
             >
               <b-dropdown
                 id="region-input"
@@ -214,23 +236,12 @@ export default {
               </b-dropdown>
             </b-form-group>
 
-            <b-form-group
-              id="location"
-              label="Localização"
-              label-for="location"
-              description=""
-            >
-              <b-form-input
-                id="location-input"
-                v-model="location"
-                class="textInput"
-                type="text"
-                placeholder="Endereço"
-                required
-              ></b-form-input>
-            </b-form-group>
-
-            <google-map is-add-new-marker/>
+            <google-map
+              add-new-marker
+              :marker-lat="lat"
+              :marker-lng="lng"
+              @updateLatLng="updateLatLng"
+            />
 
             <div class="d-flex justify-content-end mt-3">
               <b-button variant="danger">Excluir Local</b-button>

@@ -78,11 +78,16 @@ h1 {
   color: $primary;
 }
 
-label {
+.label {
+  font-size: 16px;
+  color: $primary;
+}
+
+.formLabel {
   font-family: "FireSans";
   font-size: 1.75rem;
   font-weight: 600;
-  color: #024053;
+  color: $primary;
   line-height: 2rem;
 }
 
@@ -120,15 +125,15 @@ label {
 }
 
 .textArea {
-  background-color: #F8F9FA;
+  background-color: $grey;
   border-radius: 0.25rem;
-  border: aliceblue;
+  border: $grey;
   overflow-y: hidden !important;
 }
 
 .border {
   border-radius: 0.75rem;
-  border-color: #9DCC9A !important;
+  border-color: $secondary !important;
 }
 
 .image {
