@@ -49,6 +49,7 @@ module.exports = {
       '@router': path.resolve(__dirname, 'src', 'router'),
       '@state': path.resolve(__dirname, 'src', 'state'),
       '@views': path.resolve(__dirname, 'src', 'views'),
+      '@utils': path.resolve(__dirname, 'src', 'utils'),
     },
     extensions: ['*', '.js', '.vue', '.json'],
   },

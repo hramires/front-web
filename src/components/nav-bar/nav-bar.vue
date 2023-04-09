@@ -15,29 +15,29 @@ export default {
       return [
         {
           name: 'Locais',
-          routeName: '',
+          routeName: 'cadastro-local',
         },
         {
           name: 'Categorias',
-          routeName: '',
+          routeName: 'categoria',
         },
         {
           name: 'Eventos',
-          routeName: '',
+          routeName: 'evento',
         },
         {
           name: 'Regiões',
-          routeName: '',
+          routeName: 'regiao',
         },
         {
           name: 'Roteiros',
-          routeName: '',
+          routeName: 'roteiro',
         },
       ];
     },
     shouldShowButtons() {
       // check if user is logged in
-      return false;
+      return this.$route.name !== 'sign-in';
     },
   },
   methods: {
@@ -58,8 +58,8 @@ export default {
         <b-button
           v-for="button in buttons"
           :key="button.routeName"
-          :variant="$router.name == button.routeName ? 'primary' : 'outline-primary'"
-          class="mr-2 bg-light"
+          :variant="$route.name == button.routeName ? 'primary' : 'outline-primary'"
+          class="mr-2"
           @click="onClick(button.routeName)"
         >{{button.name}}</b-button>
       </div>

@@ -64,3 +64,11 @@ export const actions = {
     return place;
   },
 };
+
+export default {
+  namespaced: true,
+  state,
+  getters,
+  mutations,
+  actions,
+};
