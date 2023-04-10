@@ -9,13 +9,12 @@ export const actions = {
   //     const place = await placeApi.updatePlace(id, params);
   //     return place.data ? place.data : null;
   //   },
-  //   async deletePlace({ commit }, { placeId }) {
-  //     await placeApi.deletePlace(placeId);
-  //     commit(DELETE_PLACE, { placeId });
-  //   },
+  async deleteCategory(context, { categoryId }) {
+    await categoryApi.deleteCategory(categoryId);
+  },
   async fetchAllCategories() {
     const categories = await categoryApi.getAllCategories();
-    return categories;
+    return categories.data ? categories.data : null;
   },
   //   ,
   //   async fetchPlaceById(context, { placeId }) {

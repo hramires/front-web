@@ -1,7 +1,7 @@
 <script>
 import { mapActions } from 'vuex';
 import {
-  BFormGroup, BFormInput, BButton, BDropdown,
+  BFormGroup, BFormInput, BButton, BDropdown, BModal,
 } from 'bootstrap-vue';
 import GoogleMap from '@components/google-map';
 import cloneDeep from 'lodash/cloneDeep';
@@ -30,6 +30,7 @@ export default {
     BButton,
     BDropdown,
     GoogleMap,
+    BModal,
   },
   data() {
     return {
@@ -48,16 +49,7 @@ export default {
         longitude: null,
       },
       selectedCategories: [],
-      categories: [
-        {
-          id: 1,
-          name: 'Categoria 1',
-        },
-        {
-          id: 2,
-          name: 'Categoria 2',
-        },
-      ],
+      categories: [],
       regions: [
         {
           id: 1,
@@ -91,10 +83,12 @@ export default {
     },
   },
   async created() {
-    await this.fetchPlace();
+    await this.fetchCategories();
+    this.fetchPlace();
   },
   methods: {
-    ...mapActions('places', ['fetchPlaceById', 'createPlace', 'updatePlace']),
+    ...mapActions('places', ['fetchPlaceById', 'createPlace', 'updatePlace', 'deletePlace']),
+    ...mapActions('categories', ['fetchAllCategories']),
     async fetchPlace() {
       if (this.placeId) {
         this.isLoading = true;
@@ -108,12 +102,21 @@ export default {
         this.isLoading = false;
       }
     },
+    async fetchCategories() {
+      this.categories = await this.fetchAllCategories();
+      this.categories.forEach((object) => {
+        delete object.createdAt;
+        delete object.updatedAt;
+      });
+    },
     selectCategory(categoryId) {
       const selectedCategory = this.categories.find((c) => c.id === categoryId);
-      const alreadyExists = this.selectedCategories.find((c) => c.id === categoryId);
-      if (!alreadyExists) {
-        this.selectedCategories.push(selectedCategory);
-        this.place.placeCategory_id = selectedCategory.id;
+      if (selectedCategory) {
+        const alreadyExists = this.selectedCategories.find((c) => c.id === categoryId);
+        if (!alreadyExists) {
+          this.selectedCategories.push(selectedCategory);
+          this.place.placeCategory_id = selectedCategory.id;
+        }
       }
     },
     selectRegion(regionId) {
@@ -158,6 +161,16 @@ export default {
           });
         }
       }
+    },
+    showDeleteModal() {
+      this.$refs['delete-modal'].show();
+    },
+    hideDeleteModal() {
+      this.$refs['delete-modal'].hide();
+    },
+    async deletePlaceById() {
+      await this.deletePlace({ placeId: this.placeId });
+      this.$router.push({ name: 'listar-local' });
     },
     goBack() {
       this.$router.push({ name: 'home' });
@@ -267,7 +280,11 @@ export default {
                   @click="selectCategory(category.id)"
                 >{{  category.name }}</b-dropdown-item>
               </b-dropdown>
-              <b-table class="table mt-2" striped hover :items="selectedCategories"></b-table>
+              <b-table
+                class="table mt-2"
+                striped
+                hover
+                :items="selectedCategories" />
             </div>
           </b-col>
           <b-col>
@@ -328,7 +345,7 @@ export default {
             <b-skeleton-img v-else class="w-100"/>
 
             <div v-if="placeId" class="d-flex justify-content-end mt-3">
-              <b-button variant="danger">Excluir Local</b-button>
+              <b-button variant="danger" @click="showDeleteModal">Excluir Local</b-button>
             </div>
           </b-col>
         </b-row>
@@ -345,6 +362,11 @@ export default {
       </b-button>
       <b-button variant="secondary" @click="$router.go(-1)">Cancelar</b-button>
     </div>
+
+    <b-modal ref="delete-modal" title="Tem certeza que deseja deletar?" hide-footer>
+      <b-button variant="danger" @click="deletePlaceById">Sim</b-button>
+      <b-button variant="info" @click="hideDeleteModal">Não</b-button>
+    </b-modal>
   </div>
 </template>
 

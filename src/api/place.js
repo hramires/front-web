@@ -3,19 +3,6 @@ import axios from 'axios';
 // url de teste
 const PLACE_URL = 'http://localhost:3000/place';
 
-/*
-Request body create and update:
-{
-  "id_region": "001",
-  "id_category": "002",
-  "site_name": "Example Site",
-  "photos": "longblob",
-  "opening_hours": "9:00 AM",
-  "closing_hours": "5:00 PM",
-  "appointment": "N"
-}
-*/
-
 export function createPlace(params) {
   return axios.post(PLACE_URL, params);
 }
