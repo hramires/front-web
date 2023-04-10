@@ -1,32 +1,4 @@
-import Vue from 'vue';
 import * as placeApi from '@api/place';
-import {
-  ADD_PLACES,
-  DELETE_PLACE,
-} from '@state/mutation-types';
-
-export const state = {
-  places: {},
-};
-
-export const getters = {
-  getPlaceById: (state) => (id) => state.places[id],
-  getPlaces(state) {
-    return state.places;
-  },
-};
-
-export const mutations = {
-  [DELETE_PLACE](state, { placeId }) {
-    Vue.delete(state.places, placeId);
-  },
-  [ADD_PLACES](state, places) {
-    state.places = [
-      ...state.places,
-      ...places,
-    ];
-  },
-};
 
 export const actions = {
   async createPlace(context, { params }) {
@@ -37,13 +9,11 @@ export const actions = {
     const place = await placeApi.updatePlace(id, params);
     return place.data ? place.data : null;
   },
-  async deletePlace({ commit }, { placeId }) {
+  async deletePlace(context, { placeId }) {
     await placeApi.deletePlace(placeId);
-    commit(DELETE_PLACE, { placeId });
   },
-  async fetchAllPlaces({ commit }) {
+  async fetchAllPlaces() {
     const places = await placeApi.getAllPlaces();
-    commit(ADD_PLACES, places);
     return places;
   },
   async fetchPlaceById(context, { placeId }) {
@@ -54,8 +24,5 @@ export const actions = {
 
 export default {
   namespaced: true,
-  state,
-  getters,
-  mutations,
   actions,
 };
