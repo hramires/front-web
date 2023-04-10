@@ -1,7 +1,7 @@
-import places from "./places";
-import categories from "./categories";
+import places from './places';
+import categories from './categories';
 
 export default {
   places,
-  categories
+  categories,
 };

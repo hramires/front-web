@@ -82,6 +82,13 @@ export default {
     placeId() {
       return this.$route.params.id;
     },
+    regionButtonTitle() {
+      if (this.place.region_id) {
+        const selectedRegion = this.regions.find((r) => r.id === this.place.region_id);
+        return selectedRegion.name;
+      }
+      return 'Selecione a Região';
+    },
   },
   async created() {
     await this.fetchPlace();
@@ -106,15 +113,12 @@ export default {
       const alreadyExists = this.selectedCategories.find((c) => c.id === categoryId);
       if (!alreadyExists) {
         this.selectedCategories.push(selectedCategory);
+        this.place.placeCategory_id = selectedCategory.id;
       }
     },
     selectRegion(regionId) {
       const selectedRegion = this.regions.find((r) => r.id === regionId);
-      this.region = selectedRegion;
-    },
-    getRegionName(regionId) {
-      const selectedRegion = this.regions.find((r) => r.id === regionId);
-      return selectedRegion.name;
+      this.place.region_id = selectedRegion.id;
     },
     updateLatLng(lat, lng) {
       this.place.latitude = lat.toString();
@@ -125,26 +129,30 @@ export default {
         const newPlace = await this.createPlace({ params: this.place });
         if (newPlace) {
           this.$bvToast.toast('Local criado com sucesso', {
-            autoHideDelay: 5000,
+            toaster: 'b-toaster-top-full',
             variant: 'success',
+            noCloseButton: true,
           });
         } else {
           this.$bvToast.toast('Erro ao criar local', {
-            autoHideDelay: 5000,
+            toaster: 'b-toaster-top-full',
             variant: 'danger',
+            noCloseButton: true,
           });
         }
       } else {
         const newPlace = await this.updatePlace({ id: this.placeId, params: this.place });
         if (newPlace) {
           this.$bvToast.toast('Local atualizado com sucesso', {
-            autoHideDelay: 5000,
+            toaster: 'b-toaster-top-full',
             variant: 'success',
+            noCloseButton: true,
           });
         } else {
           this.$bvToast.toast('Erro ao atualizar local', {
-            autoHideDelay: 5000,
+            toaster: 'b-toaster-top-full',
             variant: 'danger',
+            noCloseButton: true,
           });
         }
       }
@@ -295,7 +303,7 @@ export default {
               <b-dropdown
                 id="region-input"
                 v-model="place.region_id"
-                :text="place.region_id ? getRegionName(place.region_id) : 'Selecione a Região'"
+                :text="regionButtonTitle"
                 block
                 split
                 split-variant="outline-primary"
@@ -317,7 +325,7 @@ export default {
             />
             <b-skeleton-img v-else class="w-100"/>
 
-            <div class="d-flex justify-content-end mt-3">
+            <div v-if="placeId" class="d-flex justify-content-end mt-3">
               <b-button variant="danger">Excluir Local</b-button>
             </div>
           </b-col>
