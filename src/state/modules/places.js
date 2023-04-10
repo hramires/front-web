@@ -3,7 +3,6 @@ import * as placeApi from '@api/place';
 import {
   ADD_PLACES,
   DELETE_PLACE,
-  UPDATE_PLACE,
 } from '@state/mutation-types';
 
 export const state = {
@@ -27,41 +26,29 @@ export const mutations = {
       ...places,
     ];
   },
-  [UPDATE_PLACE](state, { place }) {
-    const placeIndex = state.places.findIndex((obj) => obj.id === place.id);
-    state.places[placeIndex] = place;
-  },
 };
 
 export const actions = {
-  async createPlace({ commit }, { params }) {
-    const json = JSON.stringify(params);
-    const response = await placeApi.createPlace(json);
-    const place = JSON.parse(response);
-    commit(ADD_PLACES, [place]);
-    return place;
+  async createPlace(context, { params }) {
+    const place = await placeApi.createPlace(params);
+    return place.data ? place.data : null;
   },
-  async updatePlace({ commit }, { id, params }) {
-    const json = JSON.stringify(params);
-    const response = await placeApi.updatePlace(id, json);
-    const place = JSON.parse(response);
-    commit(UPDATE_PLACE, { place });
-    return place;
+  async updatePlace(context, { id, params }) {
+    const place = await placeApi.updatePlace(id, params);
+    return place.data ? place.data : null;
   },
   async deletePlace({ commit }, { placeId }) {
     await placeApi.deletePlace(placeId);
     commit(DELETE_PLACE, { placeId });
   },
   async fetchAllPlaces({ commit }) {
-    const response = await placeApi.getAllPlaces();
-    const places = JSON.parse(response);
+    const places = await placeApi.getAllPlaces();
     commit(ADD_PLACES, places);
     return places;
   },
-  async fetchPlaceById({ placeId }) {
+  async fetchPlaceById(context, { placeId }) {
     const response = await placeApi.getPlaceById(placeId);
-    const place = JSON.parse(response);
-    return place;
+    return response.data;
   },
 };
 

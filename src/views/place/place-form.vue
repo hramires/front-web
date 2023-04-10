@@ -1,8 +1,24 @@
 <script>
+import { mapActions } from 'vuex';
 import {
   BFormGroup, BFormInput, BButton, BDropdown,
 } from 'bootstrap-vue';
 import GoogleMap from '@components/google-map';
+import cloneDeep from 'lodash/cloneDeep';
+
+// "id": 1,
+// "name": "Casa da Edição",
+// "region_id": 1,
+// "placeCategory_id": 1,
+// "photo_id": null,
+// "openingHour": null,
+// "contact": "+5551998231918",
+// "latitude": "55",
+// "longitude": "11",
+// "description": "Casa da edição nova",
+// "appointment": false,
+// "createdAt": "2023-04-09T23:12:44.116Z",
+// "updatedAt": "2023-04-09T23:12:44.116Z"
 
 export default {
   page: {
@@ -17,39 +33,44 @@ export default {
   },
   data() {
     return {
-      name: '',
-      description: '',
-      contact: '',
-      schedule: '',
-      appointment: false,
-      region: '',
-      lat: null,
-      lng: null,
+      isLoading: false,
+      place: {
+        id: null,
+        name: null,
+        description: null,
+        contact: null,
+        openingHour: null,
+        appointment: null,
+        placeCategory_id: null,
+        photo_id: null,
+        region_id: null,
+        latitude: null,
+        longitude: null,
+      },
       selectedCategories: [],
       categories: [
         {
-          id: '1',
+          id: 1,
           name: 'Categoria 1',
         },
         {
-          id: '2',
+          id: 2,
           name: 'Categoria 2',
         },
       ],
       regions: [
         {
-          id: '1',
+          id: 1,
           name: 'Região 1',
         },
         {
-          id: '2',
+          id: 2,
           name: 'Região 2',
         },
       ],
-      show: true,
       images: [
         {
-          id: '1',
+          id: 1,
           blank: true,
           blankColor: '#000',
           src: '',
@@ -57,28 +78,79 @@ export default {
       ],
     };
   },
+  computed: {
+    placeId() {
+      return this.$route.params.id;
+    },
+  },
+  async created() {
+    await this.fetchPlace();
+  },
   methods: {
-    onSubmit() {
-      console.log('submit');
-      alert(JSON.stringify(this.form));
+    ...mapActions('places', ['fetchPlaceById', 'createPlace', 'updatePlace']),
+    async fetchPlace() {
+      if (this.placeId) {
+        this.isLoading = true;
+        const place = await this.fetchPlaceById({ placeId: this.placeId });
+        if (place) {
+          this.place = cloneDeep(place);
+          if (this.place.placeCategory_id) {
+            this.selectCategory(this.place.placeCategory_id);
+          }
+        }
+        this.isLoading = false;
+      }
     },
-    goBack() {
-      this.$router.push({ name: 'home' });
-    },
-    selectCategory(value) {
-      const selectedCategory = this.categories.find((c) => c.id === value);
-      const alreadyExists = this.selectedCategories.find((c) => c.id === value);
+    selectCategory(categoryId) {
+      const selectedCategory = this.categories.find((c) => c.id === categoryId);
+      const alreadyExists = this.selectedCategories.find((c) => c.id === categoryId);
       if (!alreadyExists) {
         this.selectedCategories.push(selectedCategory);
       }
     },
-    selectRegion(value) {
-      const selectedRegion = this.regions.find((r) => r.id === value);
+    selectRegion(regionId) {
+      const selectedRegion = this.regions.find((r) => r.id === regionId);
       this.region = selectedRegion;
     },
+    getRegionName(regionId) {
+      const selectedRegion = this.regions.find((r) => r.id === regionId);
+      return selectedRegion.name;
+    },
     updateLatLng(lat, lng) {
-      this.lat = lat;
-      this.lng = lng;
+      this.place.latitude = lat.toString();
+      this.place.longitude = lng.toString();
+    },
+    async onSubmit() {
+      if (!this.placeId) {
+        const newPlace = await this.createPlace({ params: this.place });
+        if (newPlace) {
+          this.$bvToast.toast('Local criado com sucesso', {
+            autoHideDelay: 5000,
+            variant: 'success',
+          });
+        } else {
+          this.$bvToast.toast('Erro ao criar local', {
+            autoHideDelay: 5000,
+            variant: 'danger',
+          });
+        }
+      } else {
+        const newPlace = await this.updatePlace({ id: this.placeId, params: this.place });
+        if (newPlace) {
+          this.$bvToast.toast('Local atualizado com sucesso', {
+            autoHideDelay: 5000,
+            variant: 'success',
+          });
+        } else {
+          this.$bvToast.toast('Erro ao atualizar local', {
+            autoHideDelay: 5000,
+            variant: 'danger',
+          });
+        }
+      }
+    },
+    goBack() {
+      this.$router.push({ name: 'home' });
     },
   },
 };
@@ -86,9 +158,9 @@ export default {
 
 <template>
   <div>
-    <b-button variant="secondary" class="mb-2">Voltar</b-button>
+    <b-button variant="secondary" class="mb-2" @click="$router.go(-1)">Voltar</b-button>
     <h1 class="text-primary title">
-      PAINEL DE CADASTRO - LOCAL
+      {{ placeId ? 'PAINEL DE GERENCIAMENTO - LOCAL' : 'PAINEL DE CADASTRO - LOCAL'}}
     </h1>
     <div class="border border-primary">
         <b-row :class="$style.row">
@@ -103,7 +175,7 @@ export default {
               <b-form-input
                 id="name"
                 class="textInput"
-                v-model="name"
+                v-model="place.name"
                 type="text"
                 placeholder="Novo Local"
                 required
@@ -120,7 +192,7 @@ export default {
               <b-form-textarea
                 id="description"
                 class="textArea"
-                v-model="description"
+                v-model="place.description"
                 placeholder="Descrição única do local"
                 rows="3"
                 max-rows="6"
@@ -136,7 +208,7 @@ export default {
             >
               <b-form-input
                 id="contact"
-                v-model="contact"
+                v-model="place.contact"
                 class="textInput"
                 type="text"
                 placeholder="+55 (51) 99999-9999"
@@ -154,7 +226,7 @@ export default {
               <b-form-textarea
                 id="schedule"
                 class="textArea"
-                v-model="schedule"
+                v-model="place.openingHour"
                 placeholder="Horários"
                 rows="3"
                 max-rows="6"
@@ -163,7 +235,7 @@ export default {
 
             <b-form-checkbox
               id="appointment"
-              v-model="appointment"
+              v-model="place.appointment"
               name="appointment"
               class="label mb-3 d-flex align-items-center"
             >
@@ -222,8 +294,8 @@ export default {
             >
               <b-dropdown
                 id="region-input"
-                v-model="region"
-                :text="region ? region.name : 'Selecione a Região'"
+                v-model="place.region_id"
+                :text="place.region_id ? getRegionName(place.region_id) : 'Selecione a Região'"
                 block
                 split
                 split-variant="outline-primary"
@@ -237,11 +309,13 @@ export default {
             </b-form-group>
 
             <google-map
+              v-if="!isLoading"
               add-new-marker
-              :marker-lat="lat"
-              :marker-lng="lng"
+              :marker-lat="parseFloat(place.latitude)"
+              :marker-lng="parseFloat(place.longitude)"
               @updateLatLng="updateLatLng"
             />
+            <b-skeleton-img v-else class="w-100"/>
 
             <div class="d-flex justify-content-end mt-3">
               <b-button variant="danger">Excluir Local</b-button>
@@ -255,11 +329,11 @@ export default {
         type="submit"
         variant="primary"
         class="mr-2"
-        @click="onSubmit($event)"
+        @click="onSubmit"
       >
         Salvar
       </b-button>
-      <b-button variant="secondary">Cancelar</b-button>
+      <b-button variant="secondary" @click="$router.go(-1)">Cancelar</b-button>
     </div>
   </div>
 </template>

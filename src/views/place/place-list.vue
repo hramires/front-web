@@ -30,7 +30,13 @@ export default {
             and make up the bulk of the card's content.
           </b-card-text>
           <b-card-text :class="$style.updated"> Last updated 3 minutes ago</b-card-text>
-          <b-button :class="$style.button" href="#" variant="primary">Editar</b-button>
+          <b-button
+            :class="$style.button"
+            variant="primary"
+            @click="$router.push({ name: 'editar-local', params: {id: 1}})"
+          >
+            Editar
+          </b-button>
         </b-card>
 
         <b-card
@@ -98,7 +104,7 @@ export default {
         </b-card>
       </b-row>
     </b-container>
-    <button :class="$style.floatButton" >+</button>
+    <button :class="$style.floatButton" @click="$router.push({name: 'cadastro-local'})">+</button>
   </div>
 </template>
 

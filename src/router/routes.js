@@ -1,8 +1,7 @@
 import Home from '@views/home/home.vue';
 import SignIn from '@views/sign-in/sign-in.vue';
-import CreatePlace from '@views/place/create-place.vue';
-import Place from '@views/place/place.vue';
-import ListPlace from '@views/place/list-place.vue';
+import PlaceForm from '@views/place/place-form.vue';
+import PlaceList from '@views/place/place-list.vue';
 import Category from '@views/category/category.vue';
 
 export default [
@@ -20,20 +19,20 @@ export default [
     component: SignIn,
   },
   {
-    path: '/local/:id',
-    name: 'local',
-    meta: {
-      titleKey: 'Local',
-    },
-    component: Place,
-  },
-  {
     path: '/cadastro-local',
     name: 'cadastro-local',
     meta: {
       titleKey: 'Cadastro Local',
     },
-    component: CreatePlace,
+    component: PlaceForm,
+  },
+  {
+    path: '/editar-local/:id',
+    name: 'editar-local',
+    meta: {
+      titleKey: 'Editar Local',
+    },
+    component: PlaceForm,
   },
   {
     path: '/listar-local',
@@ -41,7 +40,7 @@ export default [
     meta: {
       titleKey: 'Listar Locais',
     },
-    component: ListPlace,
+    component: PlaceList,
   },
   {
     path: '/categoria',

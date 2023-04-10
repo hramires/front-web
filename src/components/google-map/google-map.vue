@@ -40,6 +40,7 @@ export default {
     setInitialPosition() {
       this.newMarker.lat = this.markerLat ? this.markerLat : this.initialLat;
       this.newMarker.lng = this.markerLng ? this.markerLng : this.initialLng;
+      this.setMarkerLocation(this.newMarker);
     },
     onClickMarker(event) {
       const { latLng } = event;

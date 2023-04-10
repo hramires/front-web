@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // url de teste
-const PLACE_URL = 'localhost:5050/place';
+const PLACE_URL = 'http://localhost:3000/place';
 
 /*
 Request body create and update:
