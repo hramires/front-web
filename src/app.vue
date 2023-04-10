@@ -145,4 +145,19 @@ h1 {
   background-color: $green;
 }
 
+.floatButton{
+  border-radius: 50%;
+  width: 75px;
+  height: 75px;
+  border: $secondary;
+  background: $secondary;
+  position: fixed;
+  float: bottom;
+  bottom: 100px;
+  right: 50px;
+  z-index: 100;
+  color: $light;
+  font-size: 40px;
+}
+
 </style>

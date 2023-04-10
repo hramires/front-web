@@ -63,7 +63,7 @@ export default {
         <b-spinner label="Loading"></b-spinner>
       </b-row>
     </b-container>
-    <button :class="$style.floatButton" @click="$router.push({name: 'cadastro-local'})">+</button>
+    <button class="floatButton" @click="$router.push({name: 'cadastro-local'})">+</button>
   </div>
 </template>
 
@@ -86,21 +86,6 @@ export default {
 .updated{
   margin: 0;
   font-size: 0.7em;
-}
-
-.floatButton{
-  border-radius: 50%;
-  width: 75px;
-  height: 75px;
-  border: #9DCC9A;
-  background: #9DCC9A;
-  position: fixed;
-  float: bottom;
-  bottom: 100px;
-  right: 50px;
-  z-index: 100;
-  color:white;
-  font-size: 40px;
 }
 
 .footer{
