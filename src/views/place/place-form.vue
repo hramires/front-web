@@ -133,6 +133,7 @@ export default {
             variant: 'success',
             noCloseButton: true,
           });
+          this.$router.push({ name: 'listar-local' });
         } else {
           this.$bvToast.toast('Erro ao criar local', {
             toaster: 'b-toaster-top-full',
@@ -148,6 +149,7 @@ export default {
             variant: 'success',
             noCloseButton: true,
           });
+          this.$router.push({ name: 'listar-local' });
         } else {
           this.$bvToast.toast('Erro ao atualizar local', {
             toaster: 'b-toaster-top-full',

@@ -14,11 +14,11 @@ export const actions = {
   },
   async fetchAllPlaces() {
     const places = await placeApi.getAllPlaces();
-    return places;
+    return places.data ? places.data : null;
   },
   async fetchPlaceById(context, { placeId }) {
-    const response = await placeApi.getPlaceById(placeId);
-    return response.data;
+    const place = await placeApi.getPlaceById(placeId);
+    return place.data;
   },
 };
 
