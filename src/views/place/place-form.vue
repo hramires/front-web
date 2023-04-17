@@ -1,9 +1,10 @@
 <script>
 import { mapActions } from 'vuex';
 import {
-  BFormGroup, BFormInput, BButton, BDropdown, BModal,
+  BFormGroup, BFormInput, BButton, BDropdown,
 } from 'bootstrap-vue';
 import GoogleMap from '@components/google-map';
+import DeleteModal from '@components/delete-modal';
 import cloneDeep from 'lodash/cloneDeep';
 
 // "id": 1,
@@ -30,7 +31,7 @@ export default {
     BButton,
     BDropdown,
     GoogleMap,
-    BModal,
+    DeleteModal,
   },
   data() {
     return {
@@ -163,10 +164,7 @@ export default {
       }
     },
     showDeleteModal() {
-      this.$refs['delete-modal'].show();
-    },
-    hideDeleteModal() {
-      this.$refs['delete-modal'].hide();
+      this.$refs.deleteModal.show();
     },
     async deletePlaceById() {
       await this.deletePlace({ placeId: this.placeId });
@@ -363,10 +361,7 @@ export default {
       <b-button variant="secondary" @click="$router.go(-1)">Cancelar</b-button>
     </div>
 
-    <b-modal ref="delete-modal" title="Tem certeza que deseja deletar?" hide-footer>
-      <b-button variant="danger" @click="deletePlaceById">Sim</b-button>
-      <b-button variant="info" @click="hideDeleteModal">Não</b-button>
-    </b-modal>
+    <delete-modal ref="deleteModal" @clickYes="deletePlaceById"/>
   </div>
 </template>
 
