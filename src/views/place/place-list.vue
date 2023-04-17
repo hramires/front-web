@@ -1,8 +1,8 @@
 <script>
 import { mapActions } from 'vuex';
-import {
-  BCard, BButton, BSpinner,
-} from 'bootstrap-vue';
+import { BSpinner } from 'bootstrap-vue';
+import CustomCard from '@components/custom-card';
+import AddButton from '@components/add-button';
 
 export default {
   page: {
@@ -14,7 +14,7 @@ export default {
       places: [],
     };
   },
-  components: { BCard, BButton, BSpinner },
+  components: { BSpinner, CustomCard, AddButton },
   created() {
     this.fetchPlaces();
   },
@@ -27,72 +27,32 @@ export default {
         this.isLoading = false;
       }
     },
+    onClickEdit(placeId) {
+      this.$router.push({ name: 'editar-local', params: { id: placeId } });
+    },
+    onClickCreate() {
+      this.$router.push({ name: 'cadastro-local' });
+    },
   },
 };
-
 </script>
 
 <template>
   <div>
     <h1> LOCAIS CADASTRADOS </h1>
-    <b-container :class="$style.container">
+    <b-container class="mw-100">
       <b-row v-if="!isLoading">
-        <b-card
+        <custom-card
           v-for="place in places"
           :key="place.id"
-          :class="$style.card"
-          :title="place.name"
-          img-src="https://uploaddeimagens.com.br/images/004/421/358/full/Captura_de_tela_2023-04-07_133049.png?1680885102"
-          img-alt="Image"
-          img-top
-          tag="article"
-        >
-          <b-card-text>{{ place.description }}</b-card-text>
-          <div class="d-flex justify-content-between align-items-center" :class="$style.footer">
-            <b-card-text :class="$style.updated">Last updated 3 minutes ago</b-card-text>
-            <b-button
-              variant="primary"
-              @click="$router.push({ name: 'editar-local', params: {id: place.id}})"
-            >
-              Editar
-            </b-button>
-          </div>
-        </b-card>
+          :item="place"
+          @click="onClickEdit(place.id)"
+        />
       </b-row>
       <b-row v-else>
         <b-spinner label="Loading"></b-spinner>
       </b-row>
     </b-container>
-    <button class="floatButton" @click="$router.push({name: 'cadastro-local'})">+</button>
+    <add-button @click="onClickCreate"/>
   </div>
 </template>
-
-<style type="scss" module>
-
-.container {
-  max-width: 100%;
-}
-.card{
-  position: 'relative';
-  margin: 0;
-  border-radius: 20px;
-  margin-bottom: 2rem;
-  margin-right: 2rem;
-  width: 20rem;
-  max-width: 20rem;
-  height: 24rem;
-}
-
-.updated{
-  margin: 0;
-  font-size: 0.7em;
-}
-
-.footer{
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 1.25rem;
-}
-</style>
