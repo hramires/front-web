@@ -76,10 +76,10 @@ export default {
     </b-form-group>
 
     <GmapMap
-      :center="{lat:initialLat, lng:initialLng}"
+      :center="{lat:newMarker.lat, lng:newMarker.lng}"
       :zoom="12"
       map-type-id="roadmap"
-      style="width:100%; min-width:600px; height:400px"
+      :class="$style.map"
     >
       <GmapMarker
         v-for="(m, index) in markers"
@@ -98,10 +98,11 @@ export default {
 
 </template>
 
-<style type="scss" module>
+<style lang="scss" module>
 .map {
   width: 100%;
-  min-width: 600px;
-  height: 'auto';
+  min-width: 100%;
+  max-width: 100%;
+  height: 400px;
 }
 </style>

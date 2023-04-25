@@ -185,7 +185,7 @@ export default {
     </h1>
     <div class="border border-primary">
         <b-row :class="$style.row">
-          <b-col>
+          <b-col class="col-6">
             <b-form-group
               id="name"
               label="Nome do Local"
@@ -285,7 +285,7 @@ export default {
                 :items="selectedCategories" />
             </div>
           </b-col>
-          <b-col>
+          <b-col class="col-6">
             <b-form-group
               id="gallery"
               label="Fotos"
@@ -365,7 +365,7 @@ export default {
   </div>
 </template>
 
-<style type="scss" module>
+<style lang="scss" module>
 
 iframe {
   min-width: 600px;

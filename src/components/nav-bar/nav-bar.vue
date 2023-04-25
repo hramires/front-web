@@ -69,7 +69,7 @@ export default {
     </b-navbar>
 </template>
 
-<style type="scss" module>
+<style lang="scss" module>
 .logoImage {
   position: absolute;
   top: .5rem;

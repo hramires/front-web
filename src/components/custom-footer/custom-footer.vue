@@ -15,7 +15,7 @@ export default {
   </footer>
 </template>
 
-<style type="scss" module>
+<style lang="scss" module>
 .customFooter {
   position: absolute;
   bottom: 0;

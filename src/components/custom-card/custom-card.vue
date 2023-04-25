@@ -39,7 +39,7 @@ export default {
   </b-card>
 </template>
 
-<style type="scss" module>
+<style lang="scss" module>
 .card{
   position: 'relative';
   margin: 0;
