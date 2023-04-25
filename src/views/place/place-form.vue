@@ -7,6 +7,7 @@ import GoogleMap from '@components/google-map';
 import DeleteModal from '@components/delete-modal';
 import cloneDeep from 'lodash/cloneDeep';
 
+
 // "id": 1,
 // "name": "Casa da Edição",
 // "region_id": 1,
@@ -231,7 +232,8 @@ export default {
                 id="contact"
                 v-model="place.contact"
                 class="textInput"
-                type="text"
+                type="tel"
+                v-mask="'+##(##)#####-####'"
                 placeholder="+55 (51) 99999-9999"
                 required
               ></b-form-input>

@@ -6,6 +6,7 @@ import * as VueGoogleMaps from 'vue2-google-maps';
 import { GOOGLE_API_KEY } from '@config/google';
 import router from './router';
 import App from './app.vue';
+import VueMask from 'v-mask';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
@@ -40,6 +41,8 @@ Vue.use(VueGoogleMaps, {
 Vue.use(BootstrapVue);
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin);
+// Using masks for the input fields
+Vue.use(VueMask);
 
 sync(store, router);
 
