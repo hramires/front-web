@@ -21,6 +21,10 @@ export default {
       type: Number,
       default: null,
     },
+    isEditMode: {
+      type: Boolean,
+      default: true,
+    }
   },
   data() {
     return {
@@ -70,7 +74,7 @@ export default {
         v-model="newMarkerLocation"
         class="textInput"
         type="text"
-        placeholder="Endereço"
+        placeholder="isEditMode"
         readonly
       ></b-form-input>
     </b-form-group>
@@ -80,6 +84,15 @@ export default {
       :zoom="12"
       map-type-id="roadmap"
       :class="$style.map"
+      :options="{
+        zoomControl: isEditMode,
+        mapTypeControl: isEditMode,
+        scaleControl: isEditMode,
+        streetViewControl: isEditMode,
+        rotateControl: isEditMode,
+        fullscreenControl: isEditMode,
+        disableDefaultUi: !isEditMode
+      }"
     >
       <GmapMarker
         v-for="(m, index) in markers"
