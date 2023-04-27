@@ -84,15 +84,6 @@ export default {
       :zoom="12"
       map-type-id="roadmap"
       :class="$style.map"
-      :options="{
-        zoomControl: isEditMode,
-        mapTypeControl: isEditMode,
-        scaleControl: isEditMode,
-        streetViewControl: isEditMode,
-        rotateControl: isEditMode,
-        fullscreenControl: isEditMode,
-        disableDefaultUi: !isEditMode
-      }"
     >
       <GmapMarker
         v-for="(m, index) in markers"
@@ -103,7 +94,7 @@ export default {
       <GmapMarker
         v-if="addNewMarker"
         :position="newMarker"
-        draggable
+        :draggable="isEditMode"
         @dragend="onClickMarker($event)"
       />
     </GmapMap>

@@ -25,16 +25,11 @@ export default {
     img-alt="Image"
     img-top
     tag="article"
+    @click="onClick"
   >
     <b-card-text>{{ item.description }}</b-card-text>
     <div class="d-flex justify-content-between align-items-center" :class="$style.footer">
       <b-card-text :class="$style.updated">{{ item.lastUpdated }}</b-card-text>
-      <b-button
-        variant="primary"
-        @click="onClick"
-      >
-        Editar
-      </b-button>
     </div>
   </b-card>
 </template>
@@ -49,6 +44,11 @@ export default {
   width: 20rem;
   max-width: 20rem;
   height: 24rem;
+  cursor: pointer;
+}
+
+.card:hover{
+  box-shadow: 0 10px 20px 0 rgba(0,0,0,0.2);
 }
 
 .updated{

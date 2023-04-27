@@ -94,6 +94,9 @@ export default {
     ...mapActions('categories', ['fetchAllCategories']),
     async fetchPlace() {
       if (this.placeId) {
+        if (this.$route.name == 'editar-local'){
+          this.isEditMode = true
+        }
         this.isLoading = true;
         const place = await this.fetchPlaceById({ placeId: this.placeId });
         if (place) {
@@ -103,6 +106,8 @@ export default {
           }
         }
         this.isLoading = false;
+      }else{
+        this.isEditMode = true
       }
     },
     async fetchCategories() {
@@ -172,9 +177,12 @@ export default {
       await this.deletePlace({ placeId: this.placeId });
       this.$router.push({ name: 'listar-local' });
     },
-    goBack() {
-      this.$router.push({ name: 'home' });
+    cancel() {
+      this.$router.push({ name: 'listar-local' });
     },
+    goEdit(placeId){
+      this.$router.push({ name: 'editar-local', params: { id: placeId } })
+    }
   },
 };
 </script>
@@ -182,8 +190,7 @@ export default {
 <template>
   <div>
     <b-button variant="secondary" class="mb-2" @click="$router.go(-1)">Voltar</b-button>
-    <b-button v-if="!isEditMode" variant="primary" class="mb-2" @click="isEditMode = !isEditMode">Habilitar Edição</b-button>
-    <b-button v-else variant="primary" class="mb-2" @click="isEditMode = !isEditMode">Desabilitar Edição</b-button>
+    <b-button v-if="!isEditMode && placeId" variant="primary" class="mb-2" @click="isEditMode = !isEditMode; goEdit(placeId);">Editar</b-button>
     <h1 class="text-primary title">
       {{ placeId ? 'PAINEL DE GERENCIAMENTO - LOCAL' : 'PAINEL DE CADASTRO - LOCAL'}}
     </h1>
@@ -264,7 +271,8 @@ export default {
                 max-rows="6"
                 v-if="isEditMode"
               ></b-form-textarea>
-              <h5 v-else>{{ place.openingHour}}</h5>
+              <h5 v-else-if="place.openingHour != ''">{{ place.openingHour }}</h5>
+              <h5 v-else>Sem Horário de Funcionamento</h5>
             </b-form-group>
 
             <b-form-checkbox
@@ -382,7 +390,7 @@ export default {
       >
         Salvar
       </b-button>
-      <b-button v-if="isEditMode" variant="secondary" @click="$router.go(-1)">Cancelar</b-button>
+      <b-button v-if="isEditMode" variant="secondary" @click="cancel()">Cancelar</b-button>
     </div>
 
     <delete-modal ref="deleteModal" @clickYes="deletePlaceById"/>
