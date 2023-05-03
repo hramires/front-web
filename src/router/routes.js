@@ -3,7 +3,8 @@ import SignIn from '@views/sign-in/sign-in.vue';
 import PlaceForm from '@views/place/place-form.vue';
 import PlaceList from '@views/place/place-list.vue';
 import Category from '@views/category/category.vue';
-
+import EventForm from '@views/event/event-form.vue';
+import EventList from '@views/event/event-list.vue';
 export default [
   {
     path: '/',
@@ -41,6 +42,30 @@ export default [
       titleKey: 'Listar Locais',
     },
     component: PlaceList,
+  },
+  {
+    path: '/cadastro-evento',
+    name: 'cadastro-evento',
+    meta: {
+      titleKey: 'Cadastro Evento',
+    },
+    component: EventForm,
+  },
+  {
+    path: '/editar-evento/:id',
+    name: 'editar-eventp',
+    meta: {
+      titleKey: 'Editar Evento',
+    },
+    component: EventForm,
+  },
+  {
+    path: '/listar-evento',
+    name: 'listar-evento',
+    meta: {
+      titleKey: 'Listar Eventos',
+    },
+    component: EventList,
   },
   {
     path: '/categoria',
