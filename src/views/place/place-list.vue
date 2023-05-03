@@ -1,5 +1,5 @@
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import { BSpinner } from 'bootstrap-vue';
 import CustomCard from '@components/custom-card';
 import AddButton from '@components/add-button';
@@ -11,20 +11,28 @@ export default {
   data() {
     return {
       isLoading: false,
-      places: [],
     };
   },
   components: { BSpinner, CustomCard, AddButton },
   created() {
     this.fetchPlaces();
   },
+  computed: {
+    ...mapState('places', ['places']),
+  },
   methods: {
     ...mapActions('places', ['fetchAllPlaces']),
     async fetchPlaces() {
       this.isLoading = true;
-      this.places = await this.fetchAllPlaces();
+      await this.fetchAllPlaces();
       if (this.places) {
         this.isLoading = false;
+      } else {
+        this.$bvToast.toast('Erro ao buscar locais', {
+          toaster: 'b-toaster-top-full',
+          variant: 'danger',
+          noCloseButton: true,
+        });
       }
     },
     onClickCard(placeId) {

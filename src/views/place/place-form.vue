@@ -1,12 +1,11 @@
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import {
   BFormGroup, BFormInput, BButton, BDropdown,
 } from 'bootstrap-vue';
 import GoogleMap from '@components/google-map';
 import DeleteModal from '@components/delete-modal';
 import cloneDeep from 'lodash/cloneDeep';
-
 
 // "id": 1,
 // "name": "Casa da Edição",
@@ -45,7 +44,6 @@ export default {
         contact: null,
         openingHour: null,
         appointment: null,
-        placeCategory_id: null,
         photo_id: null,
         region_id: null,
         latitude: null,
@@ -74,6 +72,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('places', ['getPlaceById']),
     placeId() {
       return this.$route.params.id;
     },
@@ -98,11 +97,13 @@ export default {
           this.isEditMode = true
         }
         this.isLoading = true;
-        const place = await this.fetchPlaceById({ placeId: this.placeId });
-        if (place) {
-          this.place = cloneDeep(place);
-          if (this.place.placeCategory_id) {
-            this.selectCategory(this.place.placeCategory_id);
+        const placeTemp = this.getPlaceById(this.placeId);
+        if (placeTemp) {
+          this.place = cloneDeep(placeTemp);
+        } else {
+          const placeTemp = await this.fetchPlaceById({ placeId: this.placeId });
+          if (placeTemp) {
+            this.place = cloneDeep(placeTemp);
           }
         }
         this.isLoading = false;
@@ -111,7 +112,9 @@ export default {
       }
     },
     async fetchCategories() {
-      this.categories = await this.fetchAllCategories();
+      const response = await this.fetchAllCategories();
+      this.categories = response.categories;
+
       this.categories.forEach((object) => {
         delete object.createdAt;
         delete object.updatedAt;
