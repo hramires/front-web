@@ -1,5 +1,5 @@
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import {
   BFormGroup, BFormInput, BButton, BDropdown,
 } from 'bootstrap-vue';
@@ -49,7 +49,6 @@ export default {
         longitude: null,
       },
       selectedCategories: [],
-      categories: [],
       regions: [
         {
           id: 1,
@@ -71,9 +70,13 @@ export default {
     };
   },
   computed: {
+    ...mapState('categories', ['categories']),
     ...mapGetters('places', ['getPlaceById']),
     placeId() {
       return this.$route.params.id;
+    },
+    isEditMode() {
+      return this.$route.name === 'editar-local';
     },
     regionButtonTitle() {
       if (this.place.region_id) {
@@ -106,9 +109,7 @@ export default {
       }
     },
     async fetchCategories() {
-      const response = await this.fetchAllCategories();
-      this.categories = response.categories;
-
+      await this.fetchAllCategories();
       this.categories.forEach((object) => {
         delete object.createdAt;
         delete object.updatedAt;
@@ -174,8 +175,11 @@ export default {
       await this.deletePlace({ placeId: this.placeId });
       this.$router.push({ name: 'listar-local' });
     },
-    goBack() {
-      this.$router.push({ name: 'home' });
+    clickCancel() {
+      this.$router.push({ name: 'visualizar-local' });
+    },
+    clickEdit() {
+      this.$router.push({ name: 'editar-local', params: { id: this.placeId } });
     },
   },
 };
@@ -184,6 +188,14 @@ export default {
 <template>
   <div>
     <b-button variant="secondary" class="mb-2" @click="$router.go(-1)">Voltar</b-button>
+    <b-button
+      v-if="!isEditMode && placeId"
+      variant="primary"
+      class="mb-2"
+      @click="clickEdit();"
+    >
+      Editar
+    </b-button>
     <h1 class="text-primary title">
       {{ placeId ? 'PAINEL DE GERENCIAMENTO - LOCAL' : 'PAINEL DE CADASTRO - LOCAL'}}
     </h1>
@@ -204,7 +216,9 @@ export default {
                 type="text"
                 placeholder="Novo Local"
                 required
+                v-if="isEditMode"
               ></b-form-input>
+              <h5 v-else>{{ place.name}}</h5>
             </b-form-group>
 
             <b-form-group
@@ -221,7 +235,9 @@ export default {
                 placeholder="Descrição única do local"
                 rows="3"
                 max-rows="6"
+                v-if="isEditMode"
               ></b-form-textarea>
+              <h5 v-else>{{ place.description}}</h5>
             </b-form-group>
 
             <b-form-group
@@ -239,7 +255,9 @@ export default {
                 v-mask="'+##(##)#####-####'"
                 placeholder="+55 (51) 99999-9999"
                 required
+                v-if="isEditMode"
               ></b-form-input>
+              <h5 v-else>{{ place.contact}}</h5>
             </b-form-group>
 
             <b-form-group
@@ -256,7 +274,10 @@ export default {
                 placeholder="Horários"
                 rows="3"
                 max-rows="6"
+                v-if="isEditMode"
               ></b-form-textarea>
+              <h5 v-else-if="place.openingHour != ''">{{ place.openingHour }}</h5>
+              <h5 v-else>Sem Horário de Funcionamento</h5>
             </b-form-group>
 
             <b-form-checkbox
@@ -264,9 +285,17 @@ export default {
               v-model="place.appointment"
               name="appointment"
               class="label mb-3 d-flex align-items-center"
+              v-if="isEditMode"
             >
               Precisa marcar horário
             </b-form-checkbox>
+            <h5 v-if="!isEditMode && !place.appointment">
+              Precisa marcar horário: <b-icon icon="x-circle" scale="1" variant="danger"></b-icon>
+            </h5>
+            <h5 v-if="!isEditMode && place.appointment">
+              Precisa marcar horário:
+              <b-icon icon="check-square" scale="1" variant="success"></b-icon>
+            </h5>
 
             <label class="formLabel">Principais Categorias</label>
             <div>
@@ -276,6 +305,7 @@ export default {
                 block
                 split
                 split-variant="outline-primary"
+                :disabled="!isEditMode"
               >
                 <b-dropdown-item
                   v-for="category in categories"
@@ -329,6 +359,7 @@ export default {
                 block
                 split
                 split-variant="outline-primary"
+                :disabled="!isEditMode"
               >
                 <b-dropdown-item
                   v-for="region in regions"
@@ -340,6 +371,7 @@ export default {
 
             <google-map
               v-if="!isLoading"
+              :isEditMode="isEditMode"
               add-new-marker
               :marker-lat="parseFloat(place.latitude)"
               :marker-lng="parseFloat(place.longitude)"
@@ -348,7 +380,13 @@ export default {
             <b-skeleton-img v-else class="w-100"/>
 
             <div v-if="placeId" class="d-flex justify-content-end mt-3">
-              <b-button variant="danger" @click="showDeleteModal">Excluir Local</b-button>
+              <b-button
+                v-if="isEditMode"
+                variant="danger"
+                @click="showDeleteModal"
+              >
+                Excluir Local
+              </b-button>
             </div>
           </b-col>
         </b-row>
@@ -359,11 +397,12 @@ export default {
         type="submit"
         variant="primary"
         class="mr-2"
+        v-if="isEditMode"
         @click="onSubmit"
       >
         Salvar
       </b-button>
-      <b-button variant="secondary" @click="$router.go(-1)">Cancelar</b-button>
+      <b-button v-if="isEditMode" variant="secondary" @click="clickCancel()">Cancelar</b-button>
     </div>
 
     <delete-modal ref="deleteModal" @clickYes="deletePlaceById"/>

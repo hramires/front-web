@@ -35,8 +35,8 @@ export default {
         });
       }
     },
-    onClickEdit(placeId) {
-      this.$router.push({ name: 'editar-local', params: { id: placeId } });
+    onClickCard(placeId) {
+      this.$router.push({ name: 'visualizar-local', params: { id: placeId } });
     },
     onClickCreate() {
       this.$router.push({ name: 'cadastro-local' });
@@ -54,7 +54,7 @@ export default {
           v-for="place in places"
           :key="place.id"
           :item="place"
-          @click="onClickEdit(place.id)"
+          @click="onClickCard(place.id)"
         />
       </b-row>
       <b-row v-else>
