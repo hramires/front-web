@@ -24,7 +24,7 @@ export default {
     isEditMode: {
       type: Boolean,
       default: true,
-    }
+    },
   },
   data() {
     return {
