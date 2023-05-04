@@ -93,8 +93,8 @@ export default {
     ...mapActions('categories', ['fetchAllCategories']),
     async fetchPlace() {
       if (this.placeId) {
-        if (this.$route.name == 'editar-local'){
-          this.isEditMode = true
+        if (this.$route.name === 'editar-local') {
+          this.isEditMode = true;
         }
         this.isLoading = true;
         const placeTemp = this.getPlaceById(this.placeId);
@@ -107,8 +107,8 @@ export default {
           }
         }
         this.isLoading = false;
-      }else{
-        this.isEditMode = true
+      } else {
+        this.isEditMode = true;
       }
     },
     async fetchCategories() {
@@ -183,9 +183,9 @@ export default {
     cancel() {
       this.$router.push({ name: 'listar-local' });
     },
-    goEdit(placeId){
-      this.$router.push({ name: 'editar-local', params: { id: placeId } })
-    }
+    goEdit(placeId) {
+      this.$router.push({ name: 'editar-local', params: { id: placeId } });
+    },
   },
 };
 </script>
@@ -193,7 +193,15 @@ export default {
 <template>
   <div>
     <b-button variant="secondary" class="mb-2" @click="$router.go(-1)">Voltar</b-button>
-    <b-button v-if="!isEditMode && placeId" variant="primary" class="mb-2" @click="isEditMode = !isEditMode; goEdit(placeId);">Editar</b-button>
+    <b-button
+      v-if="!isEditMode && placeId"
+      variant="primary"
+      class="mb-2"
+      @click="isEditMode = !isEditMode;
+      goEdit(placeId);"
+    >
+      Editar
+    </b-button>
     <h1 class="text-primary title">
       {{ placeId ? 'PAINEL DE GERENCIAMENTO - LOCAL' : 'PAINEL DE CADASTRO - LOCAL'}}
     </h1>
@@ -291,7 +299,8 @@ export default {
               Precisa marcar horário: <b-icon icon="x-circle" scale="1" variant="danger"></b-icon>
             </h5>
             <h5 v-if="!isEditMode && place.appointment">
-              Precisa marcar horário: <b-icon icon="check-square" scale="1" variant="success"></b-icon>
+              Precisa marcar horário:
+              <b-icon icon="check-square" scale="1" variant="success"></b-icon>
             </h5>
 
             <label class="formLabel">Principais Categorias</label>
@@ -377,7 +386,13 @@ export default {
             <b-skeleton-img v-else class="w-100"/>
 
             <div v-if="placeId" class="d-flex justify-content-end mt-3">
-              <b-button v-if="isEditMode" variant="danger" @click="showDeleteModal">Excluir Local</b-button>
+              <b-button
+                v-if="isEditMode"
+                variant="danger"
+                @click="showDeleteModal"
+              >
+                Excluir Local
+              </b-button>
             </div>
           </b-col>
         </b-row>

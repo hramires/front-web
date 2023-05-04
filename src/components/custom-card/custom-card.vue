@@ -1,8 +1,8 @@
 <script>
-import { BCard, BButton } from 'bootstrap-vue';
+import { BCard } from 'bootstrap-vue';
 
 export default {
-  components: { BCard, BButton },
+  components: { BCard },
   props: {
     item: {
       type: Object,
