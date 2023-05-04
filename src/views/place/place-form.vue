@@ -1,5 +1,5 @@
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import {
   BFormGroup, BFormInput, BButton, BDropdown,
 } from 'bootstrap-vue';
@@ -36,7 +36,6 @@ export default {
   data() {
     return {
       isLoading: false,
-      isEditMode: false,
       place: {
         id: null,
         name: null,
@@ -50,7 +49,6 @@ export default {
         longitude: null,
       },
       selectedCategories: [],
-      categories: [],
       regions: [
         {
           id: 1,
@@ -72,9 +70,13 @@ export default {
     };
   },
   computed: {
+    ...mapState('categories', ['categories']),
     ...mapGetters('places', ['getPlaceById']),
     placeId() {
       return this.$route.params.id;
+    },
+    isEditMode() {
+      return this.$route.name === 'editar-local';
     },
     regionButtonTitle() {
       if (this.place.region_id) {
@@ -93,9 +95,6 @@ export default {
     ...mapActions('categories', ['fetchAllCategories']),
     async fetchPlace() {
       if (this.placeId) {
-        if (this.$route.name === 'editar-local') {
-          this.isEditMode = true;
-        }
         this.isLoading = true;
         const placeTemp = this.getPlaceById(this.placeId);
         if (placeTemp) {
@@ -107,14 +106,10 @@ export default {
           }
         }
         this.isLoading = false;
-      } else {
-        this.isEditMode = true;
       }
     },
     async fetchCategories() {
-      const response = await this.fetchAllCategories();
-      this.categories = response.categories;
-
+      await this.fetchAllCategories();
       this.categories.forEach((object) => {
         delete object.createdAt;
         delete object.updatedAt;
@@ -180,11 +175,11 @@ export default {
       await this.deletePlace({ placeId: this.placeId });
       this.$router.push({ name: 'listar-local' });
     },
-    cancel() {
-      this.$router.push({ name: 'listar-local' });
+    clickCancel() {
+      this.$router.push({ name: 'visualizar-local' });
     },
-    goEdit(placeId) {
-      this.$router.push({ name: 'editar-local', params: { id: placeId } });
+    clickEdit() {
+      this.$router.push({ name: 'editar-local', params: { id: this.placeId } });
     },
   },
 };
@@ -197,8 +192,7 @@ export default {
       v-if="!isEditMode && placeId"
       variant="primary"
       class="mb-2"
-      @click="isEditMode = !isEditMode;
-      goEdit(placeId);"
+      @click="clickEdit();"
     >
       Editar
     </b-button>
@@ -408,7 +402,7 @@ export default {
       >
         Salvar
       </b-button>
-      <b-button v-if="isEditMode" variant="secondary" @click="cancel()">Cancelar</b-button>
+      <b-button v-if="isEditMode" variant="secondary" @click="clickCancel()">Cancelar</b-button>
     </div>
 
     <delete-modal ref="deleteModal" @clickYes="deletePlaceById"/>
