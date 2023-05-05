@@ -1,5 +1,5 @@
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import {
   BFormGroup, BFormInput, BButton, BDropdown,
 } from 'bootstrap-vue';
@@ -7,11 +7,9 @@ import GoogleMap from '@components/google-map';
 import DeleteModal from '@components/delete-modal';
 import cloneDeep from 'lodash/cloneDeep';
 
-
 // "id": 1,
 // "name": "Casa da Edição",
 // "region_id": 1,
-// "eventCategory_id": 1,
 // "photo_id": null,
 // "openingHour": null,
 // "contact": "+5551998231918",
@@ -37,7 +35,6 @@ export default {
   data() {
     return {
       isLoading: false,
-      isEditMode: false,
       event: {
         id: null,
         name: null,
@@ -45,14 +42,12 @@ export default {
         contact: null,
         openingHour: null,
         appointment: null,
-        eventCategory_id: null,
         photo_id: null,
         region_id: null,
         latitude: null,
         longitude: null,
       },
       selectedCategories: [],
-      categories: [],
       regions: [
         {
           id: 1,
@@ -74,8 +69,13 @@ export default {
     };
   },
   computed: {
+    ...mapState('categories', ['categories']),
+    ...mapGetters('events', ['getEventById']),
     eventId() {
       return this.$route.params.id;
+    },
+    isEditMode() {
+      return this.$route.name === 'editar-evento';
     },
     regionButtonTitle() {
       if (this.event.region_id) {
@@ -87,46 +87,43 @@ export default {
   },
   async created() {
     await this.fetchCategories();
-    this.fetchEvents();
+    this.fetchEvent();
   },
   methods: {
     ...mapActions('events', ['fetchEventById', 'createEvent', 'updateEvent', 'deleteEvent']),
     ...mapActions('categories', ['fetchAllCategories']),
     async fetchEvent() {
       if (this.eventId) {
-        if (this.$route.name == 'editar-evento'){
-          this.isEditMode = true
-        }
         this.isLoading = true;
-        const event = await this.fetchEventById({ eventId: this.eventId });
-        if (event) {
-          this.event = cloneDeep(event);
-          if (this.event.eventCategory_id) {
-            this.selectCategory(this.event.eventCategory_id);
+        const eventTemp = this.getEventById(this.eventId);
+        if (eventTemp) {
+          this.event = cloneDeep(eventTemp);
+        } else {
+          const eventTemp = await this.fetchEventById({ eventId: this.eventId });
+          if (eventTemp) {
+            this.event = cloneDeep(eventTemp);
           }
         }
         this.isLoading = false;
-      }else{
-        this.isEditMode = true
       }
     },
-    async fetchCategories() {
-      this.categories = await this.fetchAllCategories();
-      this.categories.forEach((object) => {
-        delete object.createdAt;
-        delete object.updatedAt;
-      });
-    },
-    selectCategory(categoryId) {
-      const selectedCategory = this.categories.find((c) => c.id === categoryId);
-      if (selectedCategory) {
-        const alreadyExists = this.selectedCategories.find((c) => c.id === categoryId);
-        if (!alreadyExists) {
-          this.selectedCategories.push(selectedCategory);
-          this.event.eventCategory_id = selectedCategory.id;
-        }
-      }
-    },
+    // async fetchCategories() {
+    //   await this.fetchAllCategories();
+    //   this.categories.forEach((object) => {
+    //     delete object.createdAt;
+    //     delete object.updatedAt;
+    //   });
+    // },
+    // selectCategory(categoryId) {
+    //   const selectedCategory = this.categories.find((c) => c.id === categoryId);
+    //   if (selectedCategory) {
+    //     const alreadyExists = this.selectedCategories.find((c) => c.id === categoryId);
+    //     if (!alreadyExists) {
+    //       this.selectedCategories.push(selectedCategory);
+    //       this.event.eventCategory_id = selectedCategory.id;
+    //     }
+    //   }
+    // },
     selectRegion(regionId) {
       const selectedRegion = this.regions.find((r) => r.id === regionId);
       this.event.region_id = selectedRegion.id;
@@ -177,12 +174,12 @@ export default {
       await this.deleteEvent({ eventId: this.eventId });
       this.$router.push({ name: 'listar-evento' });
     },
-    cancel() {
-      this.$router.push({ name: 'listar-evento' });
+    clickCancel() {
+      this.$router.push({ name: 'visualizar-evento' });
     },
-    goEdit(eventId){
-      this.$router.push({ name: 'editar-evento', params: { id: eventId } })
-    }
+    clickEdit() {
+      this.$router.push({ name: 'editar-evento', params: { id: this.eventId } });
+    },
   },
 };
 </script>
@@ -190,9 +187,16 @@ export default {
 <template>
   <div>
     <b-button variant="secondary" class="mb-2" @click="$router.go(-1)">Voltar</b-button>
-    <b-button v-if="!isEditMode && eventId" variant="primary" class="mb-2" @click="isEditMode = !isEditMode; goEdit(eventId);">Editar</b-button>
+    <b-button
+      v-if="!isEditMode && eventId"
+      variant="primary"
+      class="mb-2"
+      @click="clickEdit();"
+    >
+      Editar
+    </b-button>
     <h1 class="text-primary title">
-      {{ eventId ? 'PAINEL DE GERENCIAMENTO - EVENTOS' : 'PAINEL DE CADASTRO - EVENTOS'}}
+      {{ eventId ? 'PAINEL DE GERENCIAMENTO - EVENTO' : 'PAINEL DE CADASTRO - EVENTO'}}
     </h1>
     <div class="border border-primary">
         <b-row :class="$style.row">
@@ -288,7 +292,8 @@ export default {
               Precisa marcar horário: <b-icon icon="x-circle" scale="1" variant="danger"></b-icon>
             </h5>
             <h5 v-if="!isEditMode && event.appointment">
-              Precisa marcar horário: <b-icon icon="check-square" scale="1" variant="success"></b-icon>
+              Precisa marcar horário:
+              <b-icon icon="check-square" scale="1" variant="success"></b-icon>
             </h5> -->
 
             <!-- <label class="formLabel">Principais Categorias</label>
@@ -374,7 +379,13 @@ export default {
             <b-skeleton-img v-else class="w-100"/>
 
             <div v-if="eventId" class="d-flex justify-content-end mt-3">
-              <b-button v-if="isEditMode" variant="danger" @click="showDeleteModal">Excluir Evento</b-button>
+              <b-button
+                v-if="isEditMode"
+                variant="danger"
+                @click="showDeleteModal"
+              >
+                Excluir Evento
+              </b-button>
             </div>
           </b-col>
         </b-row>
@@ -390,7 +401,7 @@ export default {
       >
         Salvar
       </b-button>
-      <b-button v-if="isEditMode" variant="secondary" @click="cancel()">Cancelar</b-button>
+      <b-button v-if="isEditMode" variant="secondary" @click="clickCancel()">Cancelar</b-button>
     </div>
 
     <delete-modal ref="deleteModal" @clickYes="deleteEventById"/>

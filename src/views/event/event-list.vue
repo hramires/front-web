@@ -1,5 +1,5 @@
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import { BSpinner } from 'bootstrap-vue';
 import CustomCard from '@components/custom-card';
 import AddButton from '@components/add-button';
@@ -11,20 +11,28 @@ export default {
   data() {
     return {
       isLoading: false,
-      events: [],
     };
   },
   components: { BSpinner, CustomCard, AddButton },
   created() {
     this.fetchEvents();
   },
+  computed: {
+    ...mapState('events', ['events']),
+  },
   methods: {
     ...mapActions('events', ['fetchAllEvents']),
     async fetchEvents() {
       this.isLoading = true;
-      this.events = await this.fetchAllEvents();
+      await this.fetchAllEvents();
       if (this.events) {
         this.isLoading = false;
+      } else {
+        this.$bvToast.toast('Erro ao buscar eventos', {
+          toaster: 'b-toaster-top-full',
+          variant: 'danger',
+          noCloseButton: true,
+        });
       }
     },
     onClickCard(eventId) {
