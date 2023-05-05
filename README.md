@@ -8,7 +8,7 @@
 
 node versão 16.15.0
 
-## instruções para rodar o projeto
+## instruções para rodar o projeto em desenvolvimento
 
 ``` bash
 # instalar dependencias
@@ -20,6 +20,19 @@ npm run dev
 # build para production com minification
 npm run build
 ```
+
+## instruções para rodar o projeto no Docker
+
+``` bash
+# fazer build da imagem e do container
+docker-compose build
+
+# subir o container (roda na porta 8080)
+docker-compose up
+
+```
+
+
 
 Para mais informações, consultar os [docs para vue-loader](http://vuejs.github.io/vue-loader).
 
