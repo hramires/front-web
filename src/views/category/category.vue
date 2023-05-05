@@ -1,5 +1,5 @@
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import { BButton, BSpinner } from 'bootstrap-vue';
 
 export default {
@@ -17,10 +17,12 @@ export default {
     return {
       isLoading: false,
       newCategory: '',
-      categories: [],
       lastCategoryId: 0,
       currentCategoryId: null,
     };
+  },
+  computed: {
+    ...mapState('categories', ['categories']),
   },
   created() {
     this.fetchCategories();
@@ -29,15 +31,12 @@ export default {
     ...mapActions('categories', ['fetchAllCategories', 'createCategory', 'deleteCategory']),
     async fetchCategories() {
       this.isLoading = true;
-      this.categories = await this.fetchAllCategories();
-      if (this.categories) {
-        this.isLoading = false;
-      }
+      await this.fetchAllCategories();
+      this.isLoading = false;
     },
     async addCategory() {
       const category = await this.createCategory({ params: { name: this.newCategory } });
       if (category) {
-        this.categories.push(category);
         this.newCategory = '';
         this.$bvToast.toast('Categoria criada com sucesso', {
           toaster: 'b-toaster-top-full',
@@ -62,7 +61,6 @@ export default {
     },
     async deleteCategoryById() {
       await this.deleteCategory({ categoryId: this.currentCategoryId });
-      this.fetchCategories();
       this.hideDeleteModal();
     },
   },
@@ -105,7 +103,7 @@ export default {
         </form>
       </div>
       <div>
-        <table v-if="!isLoading" class="table mt-5" striped hover>
+        <table v-if="!isLoading && categories" class="table mt-5" striped hover>
           <thead>
             <tr>
               <th class="text-dark-green">#Id</th>

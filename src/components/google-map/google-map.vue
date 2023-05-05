@@ -21,6 +21,10 @@ export default {
       type: Number,
       default: null,
     },
+    isEditMode: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
@@ -70,7 +74,7 @@ export default {
         v-model="newMarkerLocation"
         class="textInput"
         type="text"
-        placeholder="Endereço"
+        placeholder="isEditMode"
         readonly
       ></b-form-input>
     </b-form-group>
@@ -90,7 +94,7 @@ export default {
       <GmapMarker
         v-if="addNewMarker"
         :position="newMarker"
-        draggable
+        :draggable="isEditMode"
         @dragend="onClickMarker($event)"
       />
     </GmapMap>

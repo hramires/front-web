@@ -36,6 +36,14 @@ export default [
     component: PlaceForm,
   },
   {
+    path: '/visualizar-local/:id',
+    name: 'visualizar-local',
+    meta: {
+      titleKey: 'Visualizar Local',
+    },
+    component: PlaceForm,
+  },
+  {
     path: '/listar-local',
     name: 'listar-local',
     meta: {
