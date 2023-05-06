@@ -1,28 +1,82 @@
 import * as eventApi from '@api/event';
+import {
+  ADD_EVENTS,
+  DELETE_EVENT,
+  SET_EVENT,
+  UPDATE_EVENT,
+} from '@state/mutation-types';
+
+export const state = {
+  events: [],
+};
+
+export const getters = {
+  getEventById: (state) => (id) => {
+    const eventIndex = state.events.findIndex((obj) => obj.id === id);
+    return state.events[eventIndex];
+  },
+  getEvents(state) {
+    return state.events;
+  },
+};
+
+export const mutations = {
+  [DELETE_EVENT](state, eventId) {
+    const eventIndex = state.events.findIndex((obj) => obj.id === eventId);
+    state.events.splice(eventIndex, 1);
+  },
+  [ADD_EVENTS](state, events) {
+    state.events = events;
+  },
+  [UPDATE_EVENT](state, event) {
+    const eventIndex = state.events.findIndex((obj) => obj.id === event.id);
+    state.events[eventIndex] = event;
+  },
+  [SET_EVENT](state, event) {
+    const eventIndex = state.events.findIndex((obj) => obj.id === event.id);
+    if (!eventIndex) {
+      state.events = [
+        ...state.events,
+        event,
+      ];
+    }
+  },
+};
 
 export const actions = {
-  async createEvent(context, { params }) {
-    const event = await eventeApi.createEvent(params);
-    return event.data ? event.data : null;
+  async createEvent({ commit }, { params }) {
+    const response = await eventApi.createEvent(params);
+    const event = response?.data?.event;
+    commit(SET_EVENT, event);
+    return event;
   },
-  async updateEvent(context, { id, params }) {
-    const event = await eventApi.updateEvent(id, params);
-    return event.data ? event.data : null;
+  async updateEvent({ commit }, { id, params }) {
+    const response = await eventApi.updateEvent(id, params);
+    const event = response?.data?.event;
+    commit(UPDATE_EVENT, event);
+    return event;
   },
-  async deleteEvent(context, { eventId }) {
+  async deleteEvent({ commit }, { eventId }) {
     await eventApi.deleteEvent(eventId);
+    commit(DELETE_EVENT, eventId);
   },
-  async fetchAllEvents() {
-    const events = await eventApi.getAllEvents();
-    return events.data ? events.data : null;
+  async fetchAllEvents({ commit }) {
+    const response = await eventApi.getAllEvents();
+    const events = response?.data?.events;
+    commit(ADD_EVENTS, events);
   },
-  async fetchEventById(context, { eventId }) {
-    const event = await eventApi.getEventById(eventId);
-    return event.data;
+  async fetchEventById({ commit }, { eventId }) {
+    const response = await eventApi.getEventById(eventId);
+    const event = response?.data?.event;
+    commit(SET_EVENT, event);
+    return event;
   },
 };
 
 export default {
   namespaced: true,
+  state,
+  getters,
+  mutations,
   actions,
 };

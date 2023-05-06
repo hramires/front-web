@@ -39,7 +39,7 @@ export default {
       this.$router.push({ name: 'visualizar-local', params: { id: placeId } });
     },
     onClickCreate() {
-      this.$router.push({ name: 'cadastro-local' });
+      this.$router.push({ name: 'cadastrar-local' });
     },
   },
 };

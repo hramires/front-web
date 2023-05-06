@@ -39,7 +39,7 @@ export default {
       this.$router.push({ name: 'visualizar-evento', params: { id: eventId } });
     },
     onClickCreate() {
-      this.$router.push({ name: 'cadastro-evento' });
+      this.$router.push({ name: 'cadastrar-evento' });
     },
   },
 };

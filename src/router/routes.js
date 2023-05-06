@@ -31,10 +31,10 @@ export default [
     component: Category,
   },
   {
-    path: '/cadastro-local',
-    name: 'cadastro-local',
+    path: '/cadastrar-local',
+    name: 'cadastrar-local',
     meta: {
-      titleKey: 'Cadastro Local',
+      titleKey: 'Cadastrar Local',
     },
     component: PlaceForm,
   },
@@ -63,10 +63,10 @@ export default [
     component: PlaceList,
   },
   {
-    path: '/cadastro-evento',
-    name: 'cadastro-evento',
+    path: '/cadastrar-evento',
+    name: 'cadastrar-evento',
     meta: {
-      titleKey: 'Cadastro Evento',
+      titleKey: 'Cadastrar Evento',
     },
     component: EventForm,
   },

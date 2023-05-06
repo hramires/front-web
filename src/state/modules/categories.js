@@ -43,10 +43,6 @@ export const actions = {
     commit(SET_CATEGORY, category);
     return category;
   },
-  //   async updatePlace(context, { id, params }) {
-  //     const place = await placeApi.updatePlace(id, params);
-  //     return place.data ? place.data : null;
-  //   },
   async deleteCategory({ commit }, { categoryId }) {
     await categoryApi.deleteCategory(categoryId);
     commit(DELETE_CATEGORY, categoryId);
@@ -56,11 +52,6 @@ export const actions = {
     const categories = response?.data?.categories;
     commit(ADD_CATEGORIES, categories);
   },
-  //   ,
-  //   async fetchPlaceById(context, { placeId }) {
-  //     const response = await placeApi.getPlaceById(placeId);
-  //     return response.data;
-  //   }
 };
 
 export default {

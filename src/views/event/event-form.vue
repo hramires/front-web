@@ -7,19 +7,6 @@ import GoogleMap from '@components/google-map';
 import DeleteModal from '@components/delete-modal';
 import cloneDeep from 'lodash/cloneDeep';
 
-// "id": 1,
-// "name": "Casa da Edição",
-// "region_id": 1,
-// "photo_id": null,
-// "openingHour": null,
-// "contact": "+5551998231918",
-// "latitude": "55",
-// "longitude": "11",
-// "description": "Casa da edição nova",
-// "appointment": false,
-// "createdAt": "2023-04-09T23:12:44.116Z",
-// "updatedAt": "2023-04-09T23:12:44.116Z"
-
 export default {
   page: {
     meta: [{ name: 'description', content: 'Cadastro Evento' }],
@@ -75,7 +62,10 @@ export default {
       return this.$route.params.id;
     },
     isEditMode() {
-      return this.$route.name === 'editar-evento';
+      return this.$route.name.includes('editar');
+    },
+    isCreateMode() {
+      return this.$route.name.includes('cadastrar');
     },
     regionButtonTitle() {
       if (this.event.region_id) {
@@ -174,11 +164,15 @@ export default {
       await this.deleteEvent({ eventId: this.eventId });
       this.$router.push({ name: 'listar-evento' });
     },
-    clickCancel() {
-      this.$router.push({ name: 'visualizar-evento' });
-    },
     clickEdit() {
       this.$router.push({ name: 'editar-evento', params: { id: this.eventId } });
+    },
+    clickBack() {
+      if (this.isEditMode) {
+        this.$router.push({ name: 'visualizar-local' });
+        return;
+      }
+      this.$router.push({ name: 'listar-local' });
     },
   },
 };
@@ -186,12 +180,12 @@ export default {
 
 <template>
   <div>
-    <b-button variant="secondary" class="mb-2" @click="$router.go(-1)">Voltar</b-button>
+    <b-button variant="secondary" class="mb-2" @click="clickBack">Voltar</b-button>
     <b-button
       v-if="!isEditMode && eventId"
       variant="primary"
       class="mb-2"
-      @click="clickEdit();"
+      @click="clickEdit"
     >
       Editar
     </b-button>
@@ -215,7 +209,7 @@ export default {
                 type="text"
                 placeholder="Novo Evento"
                 required
-                v-if="isEditMode"
+                v-if="isEditMode || isCreateMode"
               ></b-form-input>
               <h5 v-else>{{ event.name}}</h5>
             </b-form-group>
@@ -234,7 +228,7 @@ export default {
                 placeholder="Descrição única do evento"
                 rows="3"
                 max-rows="6"
-                v-if="isEditMode"
+                v-if="isEditMode || isCreateMode"
               ></b-form-textarea>
               <h5 v-else>{{ event.description}}</h5>
             </b-form-group>
@@ -254,7 +248,7 @@ export default {
                 v-mask="'+##(##)#####-####'"
                 placeholder="+55 (51) 99999-9999"
                 required
-                v-if="isEditMode"
+                v-if="isEditMode || isCreateMode"
               ></b-form-input>
               <h5 v-else>{{ event.contact}}</h5>
             </b-form-group>
@@ -273,7 +267,7 @@ export default {
                 placeholder="Horários"
                 rows="3"
                 max-rows="6"
-                v-if="isEditMode"
+                v-if="isEditMode || isCreateMode"
               ></b-form-textarea>
               <h5 v-else-if="event.openingHour != ''">{{ event.openingHour }}</h5>
               <h5 v-else>Sem Horário de Funcionamento</h5>
@@ -358,7 +352,7 @@ export default {
                 block
                 split
                 split-variant="outline-primary"
-                :disabled="!isEditMode"
+                :disabled="!isEditMode && !isCreateMode"
               >
                 <b-dropdown-item
                   v-for="region in regions"
@@ -370,7 +364,7 @@ export default {
 
             <google-map
               v-if="!isLoading"
-              :isEditMode="isEditMode"
+              :isEditMode="isEditMode || isCreateMode"
               add-new-marker
               :marker-lat="parseFloat(event.latitude)"
               :marker-lng="parseFloat(event.longitude)"
@@ -396,12 +390,18 @@ export default {
         type="submit"
         variant="primary"
         class="mr-2"
-        v-if="isEditMode"
+        v-if="isEditMode || isCreateMode"
         @click="onSubmit"
       >
         Salvar
       </b-button>
-      <b-button v-if="isEditMode" variant="secondary" @click="clickCancel()">Cancelar</b-button>
+      <b-button
+        v-if="isEditMode || isCreateMode"
+        variant="secondary"
+        @click="clickBack"
+      >
+        Cancelar
+      </b-button>
     </div>
 
     <delete-modal ref="deleteModal" @clickYes="deleteEventById"/>

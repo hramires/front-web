@@ -33,10 +33,13 @@ export const mutations = {
     state.roadmaps[roadmapIndex] = roadmap;
   },
   [SET_ROADMAP](state, roadmap) {
-    state.roadmaps = [
-      ...state.roadmaps,
-      roadmap,
-    ];
+    const roadmapIndex = state.roadmaps.findIndex((obj) => obj.id === roadmap.id);
+    if (!roadmapIndex) {
+      state.roadmaps = [
+        ...state.roadmaps,
+        roadmap,
+      ];
+    }
   },
 };
 

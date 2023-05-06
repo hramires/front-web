@@ -57,7 +57,10 @@ export default {
       return this.$route.params.id;
     },
     isEditMode() {
-      return this.$route.name === 'editar-roteiro' || this.$route.name === 'cadastrar-roteiro';
+      return this.$route.name.includes('editar');
+    },
+    isCreateMode() {
+      return this.$route.name.includes('cadastrar');
     },
     regionButtonTitle() {
       if (this.roadmap.region_id) {
@@ -142,9 +145,9 @@ export default {
             variant: 'success',
             noCloseButton: true,
           });
-          this.$router.push({ name: 'listar-local' });
+          this.$router.push({ name: 'listar-roteiro' });
         } else {
-          this.$bvToast.toast('Erro ao criar local', {
+          this.$bvToast.toast('Erro ao criar roteiro', {
             toaster: 'b-toaster-top-full',
             variant: 'danger',
             noCloseButton: true,
@@ -158,9 +161,9 @@ export default {
             variant: 'success',
             noCloseButton: true,
           });
-          this.$router.push({ name: 'listar-local' });
+          this.$router.push({ name: 'listar-roteiro' });
         } else {
-          this.$bvToast.toast('Erro ao atualizar local', {
+          this.$bvToast.toast('Erro ao atualizar roteiro', {
             toaster: 'b-toaster-top-full',
             variant: 'danger',
             noCloseButton: true,
@@ -173,13 +176,17 @@ export default {
     },
     async deleteRoadmapById() {
       await this.deleteRoadmap({ roadmapId: this.roadmapId });
-      this.$router.push({ name: 'listar-local' });
-    },
-    clickCancel() {
-      this.$router.push({ name: 'visualizar-local' });
+      this.$router.push({ name: 'listar-roteiro' });
     },
     clickEdit() {
-      this.$router.push({ name: 'editar-local', params: { id: this.roadmapId } });
+      this.$router.push({ name: 'editar-roteiro', params: { id: this.roadmapId } });
+    },
+    clickBack() {
+      if (this.isEditMode) {
+        this.$router.push({ name: 'visualizar-roteiro' });
+        return;
+      }
+      this.$router.push({ name: 'listar-roteiro' });
     },
   },
 };
@@ -187,12 +194,12 @@ export default {
 
 <template>
   <div>
-    <b-button variant="secondary" class="mb-2" @click="$router.go(-1)">Voltar</b-button>
+    <b-button variant="secondary" class="mb-2" @click="clickBack">Voltar</b-button>
     <b-button
       v-if="!isEditMode && roadmapId"
       variant="primary"
       class="mb-2"
-      @click="clickEdit();"
+      @click="clickEdit"
     >
       Editar
     </b-button>
@@ -216,7 +223,7 @@ export default {
               type="text"
               roadmapholder="Novo Roteiro"
               required
-              v-if="isEditMode"
+              v-if="isEditMode || isCreateMode"
             ></b-form-input>
             <h5 v-else>{{ roadmap.name}}</h5>
           </b-form-group>
@@ -235,7 +242,7 @@ export default {
               roadmapholder="Descrição única do local"
               rows="3"
               max-rows="6"
-              v-if="isEditMode"
+              v-if="isEditMode || isCreateMode"
             ></b-form-textarea>
             <h5 v-else>{{ roadmap.description}}</h5>
           </b-form-group>
@@ -254,7 +261,7 @@ export default {
               block
               split
               split-variant="outline-primary"
-              :disabled="!isEditMode"
+              :disabled="!isEditMode && !isCreateMode"
             >
               <b-dropdown-item
                 v-for="region in regions"
@@ -272,7 +279,7 @@ export default {
               block
               split
               split-variant="outline-primary"
-              :disabled="!isEditMode"
+              :disabled="!isEditMode && !isCreateMode"
             >
               <b-dropdown-item
                 v-for="place in places"
@@ -320,7 +327,7 @@ export default {
               block
               split
               split-variant="outline-primary"
-              :disabled="!isEditMode"
+              :disabled="!isEditMode && !isCreateMode"
             >
               <b-dropdown-item
                 v-for="category in categories"
@@ -353,12 +360,18 @@ export default {
         type="submit"
         variant="primary"
         class="mr-2"
-        v-if="isEditMode"
+        v-if="isEditMode || isCreateMode"
         @click="onSubmit"
       >
         Salvar
       </b-button>
-      <b-button v-if="isEditMode" variant="secondary" @click="clickCancel()">Cancelar</b-button>
+      <b-button
+        v-if="isEditMode || isCreateMode"
+        variant="secondary"
+        @click="clickBack"
+      >
+        Cancelar
+      </b-button>
     </div>
 
     <delete-modal ref="deleteModal" @clickYes="deleteRoadmapById"/>
