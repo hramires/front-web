@@ -31,7 +31,7 @@ export default {
         },
         {
           name: 'Roteiros',
-          routeName: 'roteiro',
+          routeName: 'listar-roteiro',
         },
       ];
     },

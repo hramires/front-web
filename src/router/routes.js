@@ -5,6 +5,9 @@ import PlaceList from '@views/place/place-list.vue';
 import Category from '@views/category/category.vue';
 import EventForm from '@views/event/event-form.vue';
 import EventList from '@views/event/event-list.vue';
+import RoadMapForm from '@views/roadmap/roadmap-form.vue';
+import RoadMapList from '@views/roadmap/roadmap-list.vue';
+
 export default [
   {
     path: '/',
@@ -18,6 +21,14 @@ export default [
       titleKey: 'Sign In',
     },
     component: SignIn,
+  },
+  {
+    path: '/categoria',
+    name: 'categoria',
+    meta: {
+      titleKey: 'Categoria',
+    },
+    component: Category,
   },
   {
     path: '/cadastro-local',
@@ -61,7 +72,7 @@ export default [
   },
   {
     path: '/editar-evento/:id',
-    name: 'editar-eventp',
+    name: 'editar-evento',
     meta: {
       titleKey: 'Editar Evento',
     },
@@ -76,11 +87,27 @@ export default [
     component: EventList,
   },
   {
-    path: '/categoria',
-    name: 'categoria',
+    path: '/cadastrar-roteiro',
+    name: 'cadastrar-roteiro',
     meta: {
-      titleKey: 'Categoria',
+      titleKey: 'Cadastrar Roteiro',
     },
-    component: Category,
+    component: RoadMapForm,
+  },
+  {
+    path: '/visualizar-roteiro/:id',
+    name: 'visualizar-roteiro',
+    meta: {
+      titleKey: 'Visualizar Roteiro',
+    },
+    component: RoadMapForm,
+  },
+  {
+    path: '/listar-roteiro',
+    name: 'listar-roteiro',
+    meta: {
+      titleKey: 'Listar Roteiros',
+    },
+    component: RoadMapList,
   },
 ];
