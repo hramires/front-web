@@ -3,6 +3,7 @@ import SignIn from '@views/sign-in/sign-in.vue';
 import PlaceForm from '@views/place/place-form.vue';
 import PlaceList from '@views/place/place-list.vue';
 import Category from '@views/category/category.vue';
+import RoadMapForm from '@views/roadmap/roadmap-form.vue';
 
 export default [
   {
@@ -57,5 +58,13 @@ export default [
       titleKey: 'Categoria',
     },
     component: Category,
+  },
+  {
+    path: '/cadastrar-roteiro',
+    name: 'cadastrar-roteiro',
+    meta: {
+      titleKey: 'Cadastrar Roteiro',
+    },
+    component: RoadMapForm,
   },
 ];
