@@ -4,6 +4,7 @@ import PlaceForm from '@views/place/place-form.vue';
 import PlaceList from '@views/place/place-list.vue';
 import Category from '@views/category/category.vue';
 import RoadMapForm from '@views/roadmap/roadmap-form.vue';
+import RoadMapList from '@views/roadmap/roadmap-list.vue';
 
 export default [
   {
@@ -58,6 +59,22 @@ export default [
       titleKey: 'Categoria',
     },
     component: Category,
+  },
+  {
+    path: '/visualizar-roteiro/:id',
+    name: 'visualizar-roteiro',
+    meta: {
+      titleKey: 'Visualizar Roteiro',
+    },
+    component: RoadMapForm,
+  },
+  {
+    path: '/listar-roteiro',
+    name: 'listar-roteiro',
+    meta: {
+      titleKey: 'Listar Roteiros',
+    },
+    component: RoadMapList,
   },
   {
     path: '/cadastrar-roteiro',
