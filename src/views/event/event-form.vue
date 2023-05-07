@@ -86,6 +86,9 @@ export default {
         const eventTemp = this.getEventById(this.eventId);
         if (eventTemp) {
           this.event = cloneDeep(eventTemp);
+          if (this.event.place_id) {
+            this.selectPlace(this.event.place_id);
+          }
         } else {
           const eventTemp = await this.fetchEventById({ eventId: this.eventId });
           if (eventTemp) {
@@ -151,10 +154,10 @@ export default {
     },
     clickBack() {
       if (this.isEditMode) {
-        this.$router.push({ name: 'visualizar-local' });
+        this.$router.push({ name: 'visualizar-evento' });
         return;
       }
-      this.$router.push({ name: 'listar-local' });
+      this.$router.push({ name: 'listar-evento' });
     },
     forceRerenderMap() {
       this.mapKey += 1;
