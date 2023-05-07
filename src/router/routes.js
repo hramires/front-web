@@ -79,6 +79,14 @@ export default [
     component: EventForm,
   },
   {
+    path: '/visualizar-evento/:id',
+    name: 'visualizar-evento',
+    meta: {
+      titleKey: 'Visualizar Evento',
+    },
+    component: EventForm,
+  },
+  {
     path: '/listar-evento',
     name: 'listar-evento',
     meta: {

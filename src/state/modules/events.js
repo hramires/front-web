@@ -46,13 +46,13 @@ export const mutations = {
 export const actions = {
   async createEvent({ commit }, { params }) {
     const response = await eventApi.createEvent(params);
-    const event = response?.data?.event;
+    const event = response?.data;
     commit(SET_EVENT, event);
     return event;
   },
   async updateEvent({ commit }, { id, params }) {
     const response = await eventApi.updateEvent(id, params);
-    const event = response?.data?.event;
+    const event = response?.data;
     commit(UPDATE_EVENT, event);
     return event;
   },
@@ -62,12 +62,12 @@ export const actions = {
   },
   async fetchAllEvents({ commit }) {
     const response = await eventApi.getAllEvents();
-    const events = response?.data?.events;
+    const events = response?.data;
     commit(ADD_EVENTS, events);
   },
   async fetchEventById({ commit }, { eventId }) {
     const response = await eventApi.getEventById(eventId);
-    const event = response?.data?.event;
+    const event = response?.data;
     commit(SET_EVENT, event);
     return event;
   },

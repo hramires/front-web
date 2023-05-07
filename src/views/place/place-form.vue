@@ -48,6 +48,7 @@ export default {
         latitude: null,
         longitude: null,
       },
+      selectedCategoriesIds: [],
       selectedCategories: [],
       regions: [
         {
@@ -99,13 +100,13 @@ export default {
     async fetchPlace() {
       if (this.placeId) {
         this.isLoading = true;
-        const placeTemp = this.getPlaceById(this.placeId);
+        const placeTemp = await this.fetchPlaceById({ placeId: this.placeId });
         if (placeTemp) {
           this.place = cloneDeep(placeTemp);
-        } else {
-          const placeTemp = await this.fetchPlaceById({ placeId: this.placeId });
-          if (placeTemp) {
-            this.place = cloneDeep(placeTemp);
+          if (this.place.categories) {
+            this.place.categories.forEach((object) => {
+              this.selectCategory(object.id);
+            });
           }
         }
         this.isLoading = false;
@@ -121,22 +122,22 @@ export default {
     selectCategory(categoryId) {
       const selectedCategory = this.categories.find((c) => c.id === categoryId);
       if (selectedCategory) {
-        const alreadyExists = this.selectedCategories.find((c) => c.id === categoryId);
+        const alreadyExists = this.selectedCategoriesIds.includes(categoryId);
         if (!alreadyExists) {
+          this.selectedCategoriesIds.push(categoryId);
           this.selectedCategories.push(selectedCategory);
-          this.place.placeCategory_id = selectedCategory.id;
         }
       }
     },
     selectRegion(regionId) {
-      const selectedRegion = this.regions.find((r) => r.id === regionId);
-      this.place.region_id = selectedRegion.id;
+      this.place.region_id = regionId;
     },
     updateLatLng(lat, lng) {
       this.place.latitude = lat.toString();
       this.place.longitude = lng.toString();
     },
     async onSubmit() {
+      this.place.category_ids = this.selectedCategoriesIds;
       if (!this.placeId) {
         const newPlace = await this.createPlace({ params: this.place });
         if (newPlace) {

@@ -1,7 +1,7 @@
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex';
 import {
-  BFormGroup, BFormInput, BButton, BDropdown,
+  BFormGroup, BFormInput, BButton, BDropdown, BFormDatepicker,
 } from 'bootstrap-vue';
 import GoogleMap from '@components/google-map';
 import DeleteModal from '@components/delete-modal';
@@ -12,6 +12,7 @@ export default {
     meta: [{ name: 'description', content: 'Cadastro Evento' }],
   },
   components: {
+    BFormDatepicker,
     BFormGroup,
     BFormInput,
     BButton,
@@ -26,15 +27,12 @@ export default {
         id: null,
         name: null,
         description: null,
-        contact: null,
+        startDate: null,
+        endDate: null,
         openingHour: null,
-        appointment: null,
-        photo_id: null,
-        region_id: null,
-        latitude: null,
-        longitude: null,
+        place_id: null,
       },
-      selectedCategories: [],
+      selectedPlace: null,
       regions: [
         {
           id: 1,
@@ -53,10 +51,11 @@ export default {
           src: '',
         },
       ],
+      mapKey: 0,
     };
   },
   computed: {
-    ...mapState('categories', ['categories']),
+    ...mapState('places', ['places']),
     ...mapGetters('events', ['getEventById']),
     eventId() {
       return this.$route.params.id;
@@ -67,21 +66,20 @@ export default {
     isCreateMode() {
       return this.$route.name.includes('cadastrar');
     },
-    regionButtonTitle() {
-      if (this.event.region_id) {
-        const selectedRegion = this.regions.find((r) => r.id === this.event.region_id);
-        return selectedRegion.name;
+    placeButtonTitle() {
+      if (this.selectedPlace?.id) {
+        return this.selectedPlace.name;
       }
-      return 'Selecione a Região';
+      return 'Selecione o Local';
     },
   },
   async created() {
-    await this.fetchCategories();
+    await this.fetchAllPlaces();
     this.fetchEvent();
   },
   methods: {
     ...mapActions('events', ['fetchEventById', 'createEvent', 'updateEvent', 'deleteEvent']),
-    ...mapActions('categories', ['fetchAllCategories']),
+    ...mapActions('places', ['fetchAllPlaces']),
     async fetchEvent() {
       if (this.eventId) {
         this.isLoading = true;
@@ -97,26 +95,10 @@ export default {
         this.isLoading = false;
       }
     },
-    // async fetchCategories() {
-    //   await this.fetchAllCategories();
-    //   this.categories.forEach((object) => {
-    //     delete object.createdAt;
-    //     delete object.updatedAt;
-    //   });
-    // },
-    // selectCategory(categoryId) {
-    //   const selectedCategory = this.categories.find((c) => c.id === categoryId);
-    //   if (selectedCategory) {
-    //     const alreadyExists = this.selectedCategories.find((c) => c.id === categoryId);
-    //     if (!alreadyExists) {
-    //       this.selectedCategories.push(selectedCategory);
-    //       this.event.eventCategory_id = selectedCategory.id;
-    //     }
-    //   }
-    // },
-    selectRegion(regionId) {
-      const selectedRegion = this.regions.find((r) => r.id === regionId);
-      this.event.region_id = selectedRegion.id;
+    selectPlace(placeId) {
+      this.selectedPlace = this.places.find((r) => r.id === placeId);
+      this.event.place_id = this.selectedPlace.id;
+      this.forceRerenderMap();
     },
     updateLatLng(lat, lng) {
       this.event.latitude = lat.toString();
@@ -173,6 +155,9 @@ export default {
         return;
       }
       this.$router.push({ name: 'listar-local' });
+    },
+    forceRerenderMap() {
+      this.mapKey += 1;
     },
   },
 };
@@ -233,33 +218,30 @@ export default {
               <h5 v-else>{{ event.description}}</h5>
             </b-form-group>
 
-            <b-form-group
-              id="contact"
-              label="Contato"
-              label-for="contact"
-              description=""
-              class="formLabel"
-            >
-              <b-form-input
-                id="contact"
-                v-model="event.contact"
-                class="textInput"
-                type="tel"
-                v-mask="'+##(##)#####-####'"
-                placeholder="+55 (51) 99999-9999"
-                required
-                v-if="isEditMode || isCreateMode"
-              ></b-form-input>
-              <h5 v-else>{{ event.contact}}</h5>
-            </b-form-group>
-
-            <b-form-group
-              id="schedule"
-              label="Horário de Funcionamento"
-              label-for="schedule"
-              description=""
-              class="formLabel"
-            >
+            <div>
+              <label class="formLabel">Horário do evento</label>
+              <div class="d-flex">
+                <b-form-group class="mr-3">
+                  <label for="startDateTime">Data de início</label>
+                  <b-form-datepicker
+                    id="startDateTime"
+                    v-model="event.startDate"
+                    placeholder="DD/MM/YYYY"
+                    locale="pt"
+                    :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+                  />
+                </b-form-group>
+                <b-form-group>
+                  <label for="startDateTime">Data de fim</label>
+                  <b-form-datepicker
+                    id="endtDateTime"
+                    v-model="event.endDate"
+                    placeholder="DD/MM/YYYY"
+                    locale="pt"
+                    :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+                  />
+                </b-form-group>
+              </div>
               <b-form-textarea
                 id="schedule"
                 class="textArea"
@@ -271,50 +253,10 @@ export default {
               ></b-form-textarea>
               <h5 v-else-if="event.openingHour != ''">{{ event.openingHour }}</h5>
               <h5 v-else>Sem Horário de Funcionamento</h5>
-            </b-form-group>
-
-            <!-- <b-form-checkbox
-              id="appointment"
-              v-model="event.appointment"
-              name="appointment"
-              class="label mb-3 d-flex align-items-center"
-              v-if="isEditMode"
-            >
-              Precisa marcar horário
-            </b-form-checkbox>
-            <h5 v-if="!isEditMode && !event.appointment">
-              Precisa marcar horário: <b-icon icon="x-circle" scale="1" variant="danger"></b-icon>
-            </h5>
-            <h5 v-if="!isEditMode && event.appointment">
-              Precisa marcar horário:
-              <b-icon icon="check-square" scale="1" variant="success"></b-icon>
-            </h5> -->
-
-            <!-- <label class="formLabel">Principais Categorias</label>
-            <div>
-              <b-dropdown
-                id="categories"
-                text="Selecione as categorias"
-                block
-                split
-                split-variant="outline-primary"
-                :disabled="!isEditMode"
-              >
-                <b-dropdown-item
-                  v-for="category in categories"
-                  :key="`category-${category.id}`"
-                  @click="selectCategory(category.id)"
-                >{{  category.name }}</b-dropdown-item>
-              </b-dropdown>
-              <b-table
-                class="table mt-2"
-                striped
-                hover
-                :items="selectedCategories" />
-            </div> -->
+            </div>
           </b-col>
           <b-col class="col-6">
-            <b-form-group
+            <!-- <b-form-group
               id="gallery"
               label="Fotos"
               label-for="Fotos"
@@ -336,41 +278,41 @@ export default {
                     class="image rounded m1">
                 </div>
               </b-row>
-            </b-form-group>
+            </b-form-group> -->
 
             <b-form-group
-              id="region"
-              label="Região"
-              label-for="Region"
+              id="place"
+              label="Local"
+              label-for="Place"
               description=""
               class="formLabel"
             >
               <b-dropdown
-                id="region-input"
-                v-model="event.region_id"
-                :text="regionButtonTitle"
+                id="place-input"
+                v-model="event.place_id"
+                :text="placeButtonTitle"
                 block
                 split
                 split-variant="outline-primary"
                 :disabled="!isEditMode && !isCreateMode"
               >
                 <b-dropdown-item
-                  v-for="region in regions"
-                  :key="region.id"
-                  @click="selectRegion(region.id)"
-                >{{  region.name }}</b-dropdown-item>
+                  v-for="place in places"
+                  :key="place.id"
+                  @click="selectPlace(place.id)"
+                >{{  place.name }}</b-dropdown-item>
               </b-dropdown>
             </b-form-group>
 
             <google-map
-              v-if="!isLoading"
-              :isEditMode="isEditMode || isCreateMode"
+              v-if="!isLoading && selectedPlace"
+              :key="mapKey"
+              :isEditMode="false"
               add-new-marker
-              :marker-lat="parseFloat(event.latitude)"
-              :marker-lng="parseFloat(event.longitude)"
+              :marker-lat="parseFloat(selectedPlace.latitude)"
+              :marker-lng="parseFloat(selectedPlace.longitude)"
               @updateLatLng="updateLatLng"
             />
-            <b-skeleton-img v-else class="w-100"/>
 
             <div v-if="eventId" class="d-flex justify-content-end mt-3">
               <b-button

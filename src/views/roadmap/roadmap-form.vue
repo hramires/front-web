@@ -24,11 +24,11 @@ export default {
         id: null,
         name: null,
         description: null,
-        photo_id: null,
         region_id: null,
+        // photo_id: null,
       },
+      selectedPlacesIds: [],
       selectedPlaces: [],
-      selectedCategories: [],
       regions: [
         {
           id: 1,
@@ -50,7 +50,6 @@ export default {
     };
   },
   computed: {
-    ...mapState('categories', ['categories']),
     ...mapState('places', ['places']),
     ...mapGetters('roadmaps', ['getRoadmapsById']),
     roadmapId() {
@@ -71,72 +70,48 @@ export default {
     },
   },
   async created() {
-    this.fetchCategories();
     this.fetchRoadmap();
     this.fetchPlaces();
   },
   methods: {
     ...mapActions('roadmap', ['fetchRoadmapById', 'createRoadmap', 'updateRoadmap', 'deleteRoadmap']),
-    ...mapActions('categories', ['fetchAllCategories']),
     ...mapActions('places', ['fetchAllPlaces']),
     async fetchRoadmap() {
       if (this.roadmapId) {
         this.isLoading = true;
-        const roadmapTemp = this.getRoadmapById(this.roadmapId);
+        const roadmapTemp = await this.fetchRoadmapById({ roadmapId: this.roadmapId });
         if (roadmapTemp) {
           this.roadmap = cloneDeep(roadmapTemp);
-        } else {
-          const roadmapTemp = await this.fetchRoadmapById({ roadmapId: this.roadmapId });
-          if (roadmapTemp) {
-            this.roadmap = cloneDeep(roadmapTemp);
+          if (this.roadmap.places) {
+            this.roadmap.places.forEach((object) => {
+              this.selectPlaces(object.id);
+            });
           }
         }
         this.isLoading = false;
       }
     },
-    async fetchCategories() {
-      await this.fetchAllCategories();
-      this.categories.forEach((object) => {
-        object.Categoria = object.name;
-        delete object.createdAt;
-        delete object.updatedAt;
-        delete object.name;
-      });
-    },
     async fetchPlaces() {
       await this.fetchAllPlaces();
-      this.places.forEach((object) => {
-        object.Local = object.name;
-        delete object.createdAt;
-        delete object.updatedAt;
-        delete object.name;
-      });
-    },
-    selectCategory(categoryId) {
-      const selectedCategory = this.categories.find((c) => c.id === categoryId);
-      if (selectedCategory) {
-        const alreadyExists = this.selectedCategories.find((c) => c.id === categoryId);
-        if (!alreadyExists) {
-          this.selectedCategories.push(selectedCategory);
-          this.roadmap.roadmapCategory_id = selectedCategory.id;
-        }
-      }
     },
     selectPlaces(placeId) {
       const selectedPlace = this.places.find((p) => p.id === placeId);
       if (selectedPlace) {
-        const alreadyExists = this.selectedPlaces.find((p) => p.id === placeId);
+        const alreadyExists = this.selectedPlacesIds.includes(selectedPlace.id);
         if (!alreadyExists) {
-          this.selectedPlaces.push(selectedPlace);
-          this.roadmap.roadmapPlace_id = selectedPlace.id;
+          this.selectedPlacesIds.push(selectedPlace.id);
+          this.selectedPlaces.push({
+            id: selectedPlace.id,
+            name: selectedPlace.name,
+          });
         }
       }
     },
     selectRegion(regionId) {
-      const selectedRegion = this.regions.find((r) => r.id === regionId);
-      this.roadmap.region_id = selectedRegion.id;
+      this.roadmap.region_id = regionId;
     },
     async onSubmit() {
+      this.roadmap.place_ids = this.selectedPlacesIds;
       if (!this.roadmapId) {
         const newRoadmap = await this.createRoadmap({ params: this.roadmap });
         if (newRoadmap) {
@@ -274,8 +249,8 @@ export default {
           <label class="formLabel">Locais</label>
           <div>
             <b-dropdown
-              id="categories"
-              text="Selecione as categorias"
+              id="places"
+              text="Selecione os Locais"
               block
               split
               split-variant="outline-primary"
@@ -283,15 +258,15 @@ export default {
             >
               <b-dropdown-item
                 v-for="place in places"
-                :key="`category-${place.id}`"
-                @click="selectCategory(place.id)"
+                :key="`place-${place.id}`"
+                @click="selectPlaces(place.id)"
               >{{  place.name }}</b-dropdown-item>
             </b-dropdown>
             <b-table
               class="table mt-2"
               striped
               hover
-              :items="selectPlaces" />
+              :items="selectedPlaces" />
           </div>
         </b-col>
         <b-col class="col-6">
@@ -318,29 +293,6 @@ export default {
               </div>
             </b-row>
           </b-form-group>
-
-          <label class="formLabel">Principais Categorias</label>
-          <div>
-            <b-dropdown
-              id="categories"
-              text="Selecione as categorias"
-              block
-              split
-              split-variant="outline-primary"
-              :disabled="!isEditMode && !isCreateMode"
-            >
-              <b-dropdown-item
-                v-for="category in categories"
-                :key="`category-${category.id}`"
-                @click="selectCategory(category.id)"
-              >{{  category.name }}</b-dropdown-item>
-            </b-dropdown>
-            <b-table
-              class="table mt-2"
-              striped
-              hover
-              :items="selectedCategories" />
-          </div>
 
           <div v-if="roadmapId" class="d-flex justify-content-end mt-3">
             <b-button
