@@ -46,13 +46,13 @@ export const mutations = {
 export const actions = {
   async createRoadmap({ commit }, { params }) {
     const response = await roadmapApi.createRoadMap(params);
-    const roadmap = response?.data;
+    const roadmap = response?.data?.roadmap;
     commit(SET_ROADMAP, roadmap);
     return roadmap;
   },
   async updateRoadmap({ commit }, { id, params }) {
     const response = await roadmapApi.updateRoadMap(id, params);
-    const roadmap = response?.data;
+    const roadmap = response?.data?.roadmap;
     commit(UPDATE_ROADMAP, roadmap);
     return roadmap;
   },
@@ -62,14 +62,15 @@ export const actions = {
   },
   async fetchAllRoadmaps({ commit }) {
     const response = await roadmapApi.getAllRoadMaps();
-    const roadmaps = response?.data;
+    const roadmaps = response?.data?.roadmaps;
     commit(ADD_ROADMAP, roadmaps);
   },
   async fetchRoadmapById({ commit }, { roadmapId }) {
     const response = await roadmapApi.getRoadMapById(roadmapId);
-    const roadmap = response?.data;
+    const roadmap = response?.data?.roadmap;
+    const places = response?.data?.places;
     commit(SET_ROADMAP, roadmap);
-    return roadmap;
+    return { roadmap, places };
   },
 };
 

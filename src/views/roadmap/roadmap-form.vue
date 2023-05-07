@@ -70,23 +70,24 @@ export default {
     },
   },
   async created() {
+    await this.fetchPlaces();
     this.fetchRoadmap();
-    this.fetchPlaces();
   },
   methods: {
-    ...mapActions('roadmap', ['fetchRoadmapById', 'createRoadmap', 'updateRoadmap', 'deleteRoadmap']),
+    ...mapActions('roadmaps', ['fetchRoadmapById', 'createRoadmap', 'updateRoadmap', 'deleteRoadmap']),
     ...mapActions('places', ['fetchAllPlaces']),
     async fetchRoadmap() {
       if (this.roadmapId) {
         this.isLoading = true;
-        const roadmapTemp = await this.fetchRoadmapById({ roadmapId: this.roadmapId });
-        if (roadmapTemp) {
-          this.roadmap = cloneDeep(roadmapTemp);
-          if (this.roadmap.places) {
-            this.roadmap.places.forEach((object) => {
-              this.selectPlaces(object.id);
-            });
-          }
+        const { roadmap, places } = await this.fetchRoadmapById({ roadmapId: this.roadmapId });
+        if (roadmap) {
+          this.roadmap = cloneDeep(roadmap);
+        }
+        if (places) {
+          this.roadmap.region_id = places[0].region_id;
+          places.forEach((object) => {
+            this.selectPlaces(object.id);
+          });
         }
         this.isLoading = false;
       }
