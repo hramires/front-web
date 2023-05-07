@@ -103,6 +103,14 @@ export default [
     component: RoadMapForm,
   },
   {
+    path: '/editar-roteiro/:id',
+    name: 'editar-roteiro',
+    meta: {
+      titleKey: 'Editar Roteiro',
+    },
+    component: RoadMapForm,
+  },
+  {
     path: '/visualizar-roteiro/:id',
     name: 'visualizar-roteiro',
     meta: {
