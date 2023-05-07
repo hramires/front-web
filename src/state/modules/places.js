@@ -68,8 +68,9 @@ export const actions = {
   async fetchPlaceById({ commit }, { placeId }) {
     const response = await placeApi.getPlaceById(placeId);
     const place = response?.data?.place;
+    const categories = response?.data?.categories;
     commit(SET_PLACE, place);
-    return place;
+    return { place, categories };
   },
 };
 

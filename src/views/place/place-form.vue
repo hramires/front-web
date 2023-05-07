@@ -100,14 +100,14 @@ export default {
     async fetchPlace() {
       if (this.placeId) {
         this.isLoading = true;
-        const placeTemp = await this.fetchPlaceById({ placeId: this.placeId });
-        if (placeTemp) {
-          this.place = cloneDeep(placeTemp);
-          if (this.place.categories) {
-            this.place.categories.forEach((object) => {
-              this.selectCategory(object.id);
-            });
-          }
+        const { place, categories } = await this.fetchPlaceById({ placeId: this.placeId });
+        if (place) {
+          this.place = cloneDeep(place);
+        }
+        if (categories) {
+          categories.forEach((object) => {
+            this.selectCategory(object.id);
+          });
         }
         this.isLoading = false;
       }
