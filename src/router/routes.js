@@ -3,6 +3,8 @@ import SignIn from '@views/sign-in/sign-in.vue';
 import PlaceForm from '@views/place/place-form.vue';
 import PlaceList from '@views/place/place-list.vue';
 import Category from '@views/category/category.vue';
+import EventForm from '@views/event/event-form.vue';
+import EventList from '@views/event/event-list.vue';
 import RoadMapForm from '@views/roadmap/roadmap-form.vue';
 import RoadMapList from '@views/roadmap/roadmap-list.vue';
 
@@ -21,10 +23,18 @@ export default [
     component: SignIn,
   },
   {
-    path: '/cadastro-local',
-    name: 'cadastro-local',
+    path: '/categoria',
+    name: 'categoria',
     meta: {
-      titleKey: 'Cadastro Local',
+      titleKey: 'Categoria',
+    },
+    component: Category,
+  },
+  {
+    path: '/cadastrar-local',
+    name: 'cadastrar-local',
+    meta: {
+      titleKey: 'Cadastrar Local',
     },
     component: PlaceForm,
   },
@@ -53,12 +63,44 @@ export default [
     component: PlaceList,
   },
   {
-    path: '/categoria',
-    name: 'categoria',
+    path: '/cadastrar-evento',
+    name: 'cadastrar-evento',
     meta: {
-      titleKey: 'Categoria',
+      titleKey: 'Cadastrar Evento',
     },
-    component: Category,
+    component: EventForm,
+  },
+  {
+    path: '/editar-evento/:id',
+    name: 'editar-evento',
+    meta: {
+      titleKey: 'Editar Evento',
+    },
+    component: EventForm,
+  },
+  {
+    path: '/visualizar-evento/:id',
+    name: 'visualizar-evento',
+    meta: {
+      titleKey: 'Visualizar Evento',
+    },
+    component: EventForm,
+  },
+  {
+    path: '/listar-evento',
+    name: 'listar-evento',
+    meta: {
+      titleKey: 'Listar Eventos',
+    },
+    component: EventList,
+  },
+  {
+    path: '/cadastrar-roteiro',
+    name: 'cadastrar-roteiro',
+    meta: {
+      titleKey: 'Cadastrar Roteiro',
+    },
+    component: RoadMapForm,
   },
   {
     path: '/visualizar-roteiro/:id',
@@ -75,13 +117,5 @@ export default [
       titleKey: 'Listar Roteiros',
     },
     component: RoadMapList,
-  },
-  {
-    path: '/cadastrar-roteiro',
-    name: 'cadastrar-roteiro',
-    meta: {
-      titleKey: 'Cadastrar Roteiro',
-    },
-    component: RoadMapForm,
   },
 ];

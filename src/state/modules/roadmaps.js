@@ -33,23 +33,26 @@ export const mutations = {
     state.roadmaps[roadmapIndex] = roadmap;
   },
   [SET_ROADMAP](state, roadmap) {
-    state.roadmaps = [
-      ...state.roadmaps,
-      roadmap,
-    ];
+    const roadmapIndex = state.roadmaps.findIndex((obj) => obj.id === roadmap.id);
+    if (!roadmapIndex) {
+      state.roadmaps = [
+        ...state.roadmaps,
+        roadmap,
+      ];
+    }
   },
 };
 
 export const actions = {
   async createRoadmap({ commit }, { params }) {
     const response = await roadmapApi.createRoadMap(params);
-    const roadmap = response?.data?.roadmap;
+    const roadmap = response?.data;
     commit(SET_ROADMAP, roadmap);
     return roadmap;
   },
   async updateRoadmap({ commit }, { id, params }) {
     const response = await roadmapApi.updateRoadMap(id, params);
-    const roadmap = response?.data?.roadmap;
+    const roadmap = response?.data;
     commit(UPDATE_ROADMAP, roadmap);
     return roadmap;
   },
@@ -59,12 +62,12 @@ export const actions = {
   },
   async fetchAllRoadmaps({ commit }) {
     const response = await roadmapApi.getAllRoadMaps();
-    const roadmaps = response?.data?.roadmaps;
+    const roadmaps = response?.data;
     commit(ADD_ROADMAP, roadmaps);
   },
   async fetchRoadmapById({ commit }, { roadmapId }) {
     const response = await roadmapApi.getRoadMapById(roadmapId);
-    const roadmap = response?.data?.roadmap;
+    const roadmap = response?.data;
     commit(SET_ROADMAP, roadmap);
     return roadmap;
   },

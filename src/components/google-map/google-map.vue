@@ -74,7 +74,6 @@ export default {
         v-model="newMarkerLocation"
         class="textInput"
         type="text"
-        placeholder="isEditMode"
         readonly
       ></b-form-input>
     </b-form-group>

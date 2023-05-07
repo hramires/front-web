@@ -33,10 +33,13 @@ export const mutations = {
     state.places[placeIndex] = place;
   },
   [SET_PLACE](state, place) {
-    state.places = [
-      ...state.places,
-      place,
-    ];
+    const placeIndex = state.places.findIndex((obj) => obj.id === place.id);
+    if (!placeIndex) {
+      state.places = [
+        ...state.places,
+        place,
+      ];
+    }
   },
 };
 

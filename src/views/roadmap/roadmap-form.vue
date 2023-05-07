@@ -24,11 +24,11 @@ export default {
         id: null,
         name: null,
         description: null,
-        photo_id: null,
         region_id: null,
+        // photo_id: null,
       },
+      selectedPlacesIds: [],
       selectedPlaces: [],
-      selectedCategories: [],
       regions: [
         {
           id: 1,
@@ -50,14 +50,16 @@ export default {
     };
   },
   computed: {
-    ...mapState('categories', ['categories']),
     ...mapState('places', ['places']),
     ...mapGetters('roadmaps', ['getRoadmapsById']),
     roadmapId() {
       return this.$route.params.id;
     },
     isEditMode() {
-      return this.$route.name === 'editar-roteiro' || this.$route.name === 'cadastrar-roteiro';
+      return this.$route.name.includes('editar');
+    },
+    isCreateMode() {
+      return this.$route.name.includes('cadastrar');
     },
     regionButtonTitle() {
       if (this.roadmap.region_id) {
@@ -68,72 +70,48 @@ export default {
     },
   },
   async created() {
-    this.fetchCategories();
     this.fetchRoadmap();
     this.fetchPlaces();
   },
   methods: {
     ...mapActions('roadmap', ['fetchRoadmapById', 'createRoadmap', 'updateRoadmap', 'deleteRoadmap']),
-    ...mapActions('categories', ['fetchAllCategories']),
     ...mapActions('places', ['fetchAllPlaces']),
     async fetchRoadmap() {
       if (this.roadmapId) {
         this.isLoading = true;
-        const roadmapTemp = this.getRoadmapById(this.roadmapId);
+        const roadmapTemp = await this.fetchRoadmapById({ roadmapId: this.roadmapId });
         if (roadmapTemp) {
           this.roadmap = cloneDeep(roadmapTemp);
-        } else {
-          const roadmapTemp = await this.fetchRoadmapById({ roadmapId: this.roadmapId });
-          if (roadmapTemp) {
-            this.roadmap = cloneDeep(roadmapTemp);
+          if (this.roadmap.places) {
+            this.roadmap.places.forEach((object) => {
+              this.selectPlaces(object.id);
+            });
           }
         }
         this.isLoading = false;
       }
     },
-    async fetchCategories() {
-      await this.fetchAllCategories();
-      this.categories.forEach((object) => {
-        object.Categoria = object.name;
-        delete object.createdAt;
-        delete object.updatedAt;
-        delete object.name;
-      });
-    },
     async fetchPlaces() {
       await this.fetchAllPlaces();
-      this.places.forEach((object) => {
-        object.Local = object.name;
-        delete object.createdAt;
-        delete object.updatedAt;
-        delete object.name;
-      });
-    },
-    selectCategory(categoryId) {
-      const selectedCategory = this.categories.find((c) => c.id === categoryId);
-      if (selectedCategory) {
-        const alreadyExists = this.selectedCategories.find((c) => c.id === categoryId);
-        if (!alreadyExists) {
-          this.selectedCategories.push(selectedCategory);
-          this.roadmap.roadmapCategory_id = selectedCategory.id;
-        }
-      }
     },
     selectPlaces(placeId) {
       const selectedPlace = this.places.find((p) => p.id === placeId);
       if (selectedPlace) {
-        const alreadyExists = this.selectedPlaces.find((p) => p.id === placeId);
+        const alreadyExists = this.selectedPlacesIds.includes(selectedPlace.id);
         if (!alreadyExists) {
-          this.selectedPlaces.push(selectedPlace);
-          this.roadmap.roadmapPlace_id = selectedPlace.id;
+          this.selectedPlacesIds.push(selectedPlace.id);
+          this.selectedPlaces.push({
+            id: selectedPlace.id,
+            name: selectedPlace.name,
+          });
         }
       }
     },
     selectRegion(regionId) {
-      const selectedRegion = this.regions.find((r) => r.id === regionId);
-      this.roadmap.region_id = selectedRegion.id;
+      this.roadmap.region_id = regionId;
     },
     async onSubmit() {
+      this.roadmap.place_ids = this.selectedPlacesIds;
       if (!this.roadmapId) {
         const newRoadmap = await this.createRoadmap({ params: this.roadmap });
         if (newRoadmap) {
@@ -142,9 +120,9 @@ export default {
             variant: 'success',
             noCloseButton: true,
           });
-          this.$router.push({ name: 'listar-local' });
+          this.$router.push({ name: 'listar-roteiro' });
         } else {
-          this.$bvToast.toast('Erro ao criar local', {
+          this.$bvToast.toast('Erro ao criar roteiro', {
             toaster: 'b-toaster-top-full',
             variant: 'danger',
             noCloseButton: true,
@@ -158,9 +136,9 @@ export default {
             variant: 'success',
             noCloseButton: true,
           });
-          this.$router.push({ name: 'listar-local' });
+          this.$router.push({ name: 'listar-roteiro' });
         } else {
-          this.$bvToast.toast('Erro ao atualizar local', {
+          this.$bvToast.toast('Erro ao atualizar roteiro', {
             toaster: 'b-toaster-top-full',
             variant: 'danger',
             noCloseButton: true,
@@ -173,13 +151,17 @@ export default {
     },
     async deleteRoadmapById() {
       await this.deleteRoadmap({ roadmapId: this.roadmapId });
-      this.$router.push({ name: 'listar-local' });
-    },
-    clickCancel() {
-      this.$router.push({ name: 'visualizar-local' });
+      this.$router.push({ name: 'listar-roteiro' });
     },
     clickEdit() {
-      this.$router.push({ name: 'editar-local', params: { id: this.roadmapId } });
+      this.$router.push({ name: 'editar-roteiro', params: { id: this.roadmapId } });
+    },
+    clickBack() {
+      if (this.isEditMode) {
+        this.$router.push({ name: 'visualizar-roteiro' });
+        return;
+      }
+      this.$router.push({ name: 'listar-roteiro' });
     },
   },
 };
@@ -187,12 +169,12 @@ export default {
 
 <template>
   <div>
-    <b-button variant="secondary" class="mb-2" @click="$router.go(-1)">Voltar</b-button>
+    <b-button variant="secondary" class="mb-2" @click="clickBack">Voltar</b-button>
     <b-button
       v-if="!isEditMode && roadmapId"
       variant="primary"
       class="mb-2"
-      @click="clickEdit();"
+      @click="clickEdit"
     >
       Editar
     </b-button>
@@ -216,7 +198,7 @@ export default {
               type="text"
               roadmapholder="Novo Roteiro"
               required
-              v-if="isEditMode"
+              v-if="isEditMode || isCreateMode"
             ></b-form-input>
             <h5 v-else>{{ roadmap.name}}</h5>
           </b-form-group>
@@ -235,7 +217,7 @@ export default {
               roadmapholder="Descrição única do local"
               rows="3"
               max-rows="6"
-              v-if="isEditMode"
+              v-if="isEditMode || isCreateMode"
             ></b-form-textarea>
             <h5 v-else>{{ roadmap.description}}</h5>
           </b-form-group>
@@ -254,7 +236,7 @@ export default {
               block
               split
               split-variant="outline-primary"
-              :disabled="!isEditMode"
+              :disabled="!isEditMode && !isCreateMode"
             >
               <b-dropdown-item
                 v-for="region in regions"
@@ -267,24 +249,24 @@ export default {
           <label class="formLabel">Locais</label>
           <div>
             <b-dropdown
-              id="categories"
-              text="Selecione as categorias"
+              id="places"
+              text="Selecione os Locais"
               block
               split
               split-variant="outline-primary"
-              :disabled="!isEditMode"
+              :disabled="!isEditMode && !isCreateMode"
             >
               <b-dropdown-item
                 v-for="place in places"
-                :key="`category-${place.id}`"
-                @click="selectCategory(place.id)"
+                :key="`place-${place.id}`"
+                @click="selectPlaces(place.id)"
               >{{  place.name }}</b-dropdown-item>
             </b-dropdown>
             <b-table
               class="table mt-2"
               striped
               hover
-              :items="selectPlaces" />
+              :items="selectedPlaces" />
           </div>
         </b-col>
         <b-col class="col-6">
@@ -312,29 +294,6 @@ export default {
             </b-row>
           </b-form-group>
 
-          <label class="formLabel">Principais Categorias</label>
-          <div>
-            <b-dropdown
-              id="categories"
-              text="Selecione as categorias"
-              block
-              split
-              split-variant="outline-primary"
-              :disabled="!isEditMode"
-            >
-              <b-dropdown-item
-                v-for="category in categories"
-                :key="`category-${category.id}`"
-                @click="selectCategory(category.id)"
-              >{{  category.name }}</b-dropdown-item>
-            </b-dropdown>
-            <b-table
-              class="table mt-2"
-              striped
-              hover
-              :items="selectedCategories" />
-          </div>
-
           <div v-if="roadmapId" class="d-flex justify-content-end mt-3">
             <b-button
               v-if="isEditMode"
@@ -353,12 +312,18 @@ export default {
         type="submit"
         variant="primary"
         class="mr-2"
-        v-if="isEditMode"
+        v-if="isEditMode || isCreateMode"
         @click="onSubmit"
       >
         Salvar
       </b-button>
-      <b-button v-if="isEditMode" variant="secondary" @click="clickCancel()">Cancelar</b-button>
+      <b-button
+        v-if="isEditMode || isCreateMode"
+        variant="secondary"
+        @click="clickBack"
+      >
+        Cancelar
+      </b-button>
     </div>
 
     <delete-modal ref="deleteModal" @clickYes="deleteRoadmapById"/>

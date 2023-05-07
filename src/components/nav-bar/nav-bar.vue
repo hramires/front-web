@@ -23,7 +23,7 @@ export default {
         },
         {
           name: 'Eventos',
-          routeName: 'evento',
+          routeName: 'listar-evento',
         },
         {
           name: 'Regiões',

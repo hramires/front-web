@@ -6,7 +6,7 @@ import AddButton from '@components/add-button';
 
 export default {
   page: {
-    meta: [{ name: 'description', content: 'Listar Locais' }],
+    meta: [{ name: 'description', content: 'Listar Eventos' }],
   },
   data() {
     return {
@@ -15,31 +15,31 @@ export default {
   },
   components: { BSpinner, CustomCard, AddButton },
   created() {
-    this.fetchPlaces();
+    this.fetchEvents();
   },
   computed: {
-    ...mapState('places', ['places']),
+    ...mapState('events', ['events']),
   },
   methods: {
-    ...mapActions('places', ['fetchAllPlaces']),
-    async fetchPlaces() {
+    ...mapActions('events', ['fetchAllEvents']),
+    async fetchEvents() {
       this.isLoading = true;
-      await this.fetchAllPlaces();
-      if (this.places) {
+      await this.fetchAllEvents();
+      if (this.events) {
         this.isLoading = false;
       } else {
-        this.$bvToast.toast('Erro ao buscar locais', {
+        this.$bvToast.toast('Erro ao buscar eventos', {
           toaster: 'b-toaster-top-full',
           variant: 'danger',
           noCloseButton: true,
         });
       }
     },
-    onClickCard(placeId) {
-      this.$router.push({ name: 'visualizar-local', params: { id: placeId } });
+    onClickCard(eventId) {
+      this.$router.push({ name: 'visualizar-evento', params: { id: eventId } });
     },
     onClickCreate() {
-      this.$router.push({ name: 'cadastrar-local' });
+      this.$router.push({ name: 'cadastrar-evento' });
     },
   },
 };
@@ -47,14 +47,14 @@ export default {
 
 <template>
   <div>
-    <h1> LOCAIS CADASTRADOS </h1>
+    <h1> EVENTOS CADASTRADOS </h1>
     <b-container class="mw-100">
       <b-row v-if="!isLoading">
         <custom-card
-          v-for="place in places"
-          :key="place.id"
-          :item="place"
-          @click="onClickCard(place.id)"
+          v-for="event in events"
+          :key="event.id"
+          :item="event"
+          @click="onClickCard(event.id)"
         />
       </b-row>
       <b-row v-else>
