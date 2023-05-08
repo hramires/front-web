@@ -43,7 +43,7 @@ export default {
         {
           id: 1,
           blank: true,
-          blankColor: '#000',
+          blankColor: '#d5e4cf',
           src: '',
         },
       ],
@@ -164,6 +164,41 @@ export default {
       }
       this.$router.push({ name: 'listar-roteiro' });
     },
+    showFileInput(index) {
+      this.$set(this.images, index, {
+        ...this.images[index],
+        inputVisible: true,
+      });
+      this.$nextTick(() => {
+        this.$refs.fileInput[index].click();
+      });
+    },
+    handleImageUpload(event, index) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.images[index] = {
+            id: this.images.length,
+            blank: false,
+            blankColor: null,
+            src: e.target.result,
+          };
+          this.images.push({
+            id: this.images.length + 1,
+            blank: true,
+            blankColor: '#d5e4cf',
+            src: '',
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+    },
+    deleteImage(index) {
+      if (this.images.length > 1) {
+        this.images.splice(index, 1);
+      }
+    },
   },
 };
 </script>
@@ -279,18 +314,35 @@ export default {
             class="formLabel"
           >
             <b-row :class="$style.images">
-              <b-img
-                v-for="image in images"
-                :key="`image-${image.id}`"
-                class="image rounded-lg m1"
-                :blank="image.blank"
-                :blankColor="image.blanckColor"
-                rounded alt="images">
-              </b-img>
               <div
-                v-for="i in [2,3,4,5,6,7]"
-                :key="`image-${i}`"
+                v-for="(image, index) in images"
+                :key="`image-${index}`"
+                :class="[$style.square, $style.image]"
                 class="image rounded m1">
+                <b-img
+                  class="image rounded-lg"
+                  :src="image.src"
+                  :blank="image.blank"
+                  :blankColor="image.blankColor"
+                  rounded alt="images">
+                </b-img>
+                <span
+                  v-if="image.blank"
+                  :class="$style.more"
+                  @click="showFileInput(index)"
+                >+</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  @change="handleImageUpload($event, index)"
+                  style="display: none;"
+                  ref="fileInput"
+                />
+                <span
+                  v-if="!image.blank"
+                  :class="$style['delete-image']"
+                  @click="deleteImage(index)"
+                >&times;</span>
               </div>
             </b-row>
           </b-form-group>
@@ -344,4 +396,38 @@ iframe {
 .images {
   padding: 0 1rem;
 }
+
+.square {
+  position: relative;
+}
+
+.more {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2em;
+  color: transparent;
+  cursor: pointer;
+  user-select: none;
+}
+
+.square:hover .more {
+  color: white;
+}
+
+.delete-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 1.5em;
+  color: red;
+  cursor: pointer;
+  user-select: none;
+}
+
+.image {
+  background-color: unset;
+}
+
 </style>
