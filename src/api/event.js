@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { BASE_URL } from './utils';
 
 // url de teste
-const EVENT_URL = 'http://localhost:3000/event';
+const EVENT_URL = `${BASE_URL}/event`;
 
 export function createEvent(params) {
   return axios.post(EVENT_URL, params);

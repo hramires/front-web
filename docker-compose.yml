@@ -7,8 +7,8 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - '.:/app'
       - '/app/node_modules'
+      - './vue.conf:/etc/nginx/conf.d/vue.conf'
     ports:
       - "8080:80"
 

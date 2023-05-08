@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { BASE_URL } from './utils';
 
 // url de teste
-const CATEGORY_URL = 'http://localhost:3000/category';
+const CATEGORY_URL = `${BASE_URL}/category`;
 
 export function createCategory(params) {
   return axios.post(CATEGORY_URL, params);

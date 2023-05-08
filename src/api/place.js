@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { BASE_URL } from './utils';
 
 // url de teste
-const PLACE_URL = 'http://localhost:3000/place';
+const PLACE_URL = `${BASE_URL}/place`;
 
 export function createPlace(params) {
   return axios.post(PLACE_URL, params);
