@@ -184,12 +184,16 @@ export default {
             blankColor: null,
             src: e.target.result,
           };
-          this.images.push({
-            id: this.images.length + 1,
-            blank: true,
-            blankColor: '#d5e4cf',
-            src: '',
-          });
+          if (this.images.length < 8) {
+            this.images.push({
+              id: this.images.length + 1,
+              blank: true,
+              blankColor: '#d5e4cf',
+              src: '',
+            });
+          } else {
+            this.images = [...this.images];
+          }
         };
         reader.readAsDataURL(file);
       }
@@ -327,7 +331,7 @@ export default {
                   rounded alt="images">
                 </b-img>
                 <span
-                  v-if="image.blank"
+                  v-if="image.blank && isEditMode"
                   :class="$style.more"
                   @click="showFileInput(index)"
                 >+</span>
@@ -339,7 +343,7 @@ export default {
                   ref="fileInput"
                 />
                 <span
-                  v-if="!image.blank"
+                  v-if="!image.blank && isEditMode"
                   :class="$style['delete-image']"
                   @click="deleteImage(index)"
                 >&times;</span>
