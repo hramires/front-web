@@ -1,7 +1,7 @@
 import axios from 'axios';
+import { BASE_URL } from './utils';
 
-// url de teste
-const ROAD_MAP_URL = 'http://localhost:3000/roadmap';
+const ROAD_MAP_URL = `${BASE_URL}/roadmap`;
 
 export function createRoadMap(params) {
   return axios.post(ROAD_MAP_URL, params);
