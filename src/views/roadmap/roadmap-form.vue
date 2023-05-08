@@ -201,6 +201,13 @@ export default {
     deleteImage(index) {
       if (this.images.length > 1) {
         this.images.splice(index, 1);
+        this.images = this.images.filter((image) => !image.blank);
+        this.images.push({
+          id: this.images.length + 1,
+          blank: true,
+          blankColor: '#d5e4cf',
+          src: '',
+        });
       }
     },
   },
