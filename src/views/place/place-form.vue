@@ -50,6 +50,8 @@ export default {
       },
       selectedCategoriesIds: [],
       selectedCategories: [],
+      maxChars: 2040,
+      charsLeft: 2040,
       regions: [
         {
           id: 1,
@@ -88,6 +90,17 @@ export default {
         return selectedRegion.name;
       }
       return 'Selecione a Região';
+    },
+    charactersLeft: {
+      get() {
+        if (this.place.description) {
+          return this.charsLeft - this.place.description.length;
+        }
+        return this.place.description;
+      },
+      set(value) {
+        this.charsLeft = value;
+      },
     },
   },
   async created() {
@@ -253,6 +266,7 @@ export default {
                 v-if="isEditMode || isCreateMode"
               ></b-form-textarea>
               <h5 v-else>{{ place.description}}</h5>
+              <span :class="$style['char-count']">{{ charactersLeft }} / 2040 caracteres</span>
             </b-form-group>
 
             <b-form-group
@@ -464,5 +478,11 @@ iframe {
 
 .images {
   padding: 0 1rem;
+}
+
+.char-count {
+  font-size: 0.8rem;
+  color: #999;
+  margin-top: 0.5rem;
 }
 </style>
