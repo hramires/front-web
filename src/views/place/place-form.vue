@@ -5,6 +5,7 @@ import {
 } from 'bootstrap-vue';
 import GoogleMap from '@components/google-map';
 import DeleteModal from '@components/delete-modal';
+import ImageUploader from '@components/image-uploader';
 import cloneDeep from 'lodash/cloneDeep';
 
 // "id": 1,
@@ -32,6 +33,7 @@ export default {
     BDropdown,
     GoogleMap,
     DeleteModal,
+    ImageUploader,
   },
   data() {
     return {
@@ -60,11 +62,11 @@ export default {
           name: 'Região 2',
         },
       ],
-      images: [
+      uploadedImages: [
         {
           id: 1,
           blank: true,
-          blankColor: '#000',
+          blankColor: '#d5e4cf',
           src: '',
         },
       ],
@@ -188,6 +190,9 @@ export default {
         return;
       }
       this.$router.push({ name: 'listar-local' });
+    },
+    handleImagesUpdate(images) {
+      this.uploadedImages = images;
     },
   },
 };
@@ -334,21 +339,12 @@ export default {
               description=""
               class="formLabel"
             >
-              <b-row :class="$style.images">
-                <b-img
-                    v-for="image in images"
-                    :key="`image-${image.id}`"
-                    class="image rounded-lg m1"
-                    :blank="image.blank"
-                    :blankColor="image.blanckColor"
-                    rounded alt="images">
-                </b-img>
-                <div
-                    v-for="i in [2,3,4,5,6,7]"
-                    :key="`image-${i}`"
-                    class="image rounded m1">
-                </div>
-              </b-row>
+              <ImageUploader
+                :isEditMode="isEditMode || isCreateMode"
+                :inputImages="uploadedImages"
+                @update-images="handleImagesUpdate"
+              >
+              </ImageUploader>
             </b-form-group>
 
             <b-form-group
