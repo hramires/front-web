@@ -129,6 +129,13 @@ export default {
         }
       }
     },
+    removeSelectedCategory(categoryId) {
+      const index = this.selectedCategoriesIds.indexOf(categoryId);
+      if (index > -1) {
+        this.selectedCategoriesIds.splice(index, 1);
+        this.selectedCategories.splice(index, 1);
+      }
+    },
     selectRegion(regionId) {
       this.place.region_id = regionId;
     },
@@ -313,17 +320,41 @@ export default {
                 split-variant="outline-primary"
                 :disabled="!isEditMode && !isCreateMode"
               >
-                <b-dropdown-item
-                  v-for="category in categories"
-                  :key="`category-${category.id}`"
-                  @click="selectCategory(category.id)"
-                >{{  category.name }}</b-dropdown-item>
+              <b-dropdown-item
+                v-for="category in categories"
+                :key="`category-${category.id}`"
+                @click="selectCategory(category.id)"
+              >{{  category.name }}</b-dropdown-item>
               </b-dropdown>
-              <b-table
-                class="table mt-2"
-                striped
-                hover
-                :items="selectedCategories" />
+
+              <table v-if="!isLoading && selectedCategories" class="table mt-5" striped hover>
+                <thead>
+                <tr>
+                  <th class="text-dark-green">#</th>
+                  <th class="text-dark-green">Categoria</th>
+                  <th class="text-dark-green" v-if="isEditMode || isCreateMode">Ação</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr
+                  v-for="(category, index) in selectedCategories"
+                  :key="category.id"
+                  :class="{ 'table-secondary': index % 2 == 0, 'table-light': index % 2 != 0 }"
+                >
+                  <td>{{ category.id }}</td>
+                  <td>{{ category.name }}</td>
+                  <td v-if="isEditMode || isCreateMode">
+                    <b-button
+                      type="button"
+                      variant="danger"
+                      @click="removeSelectedCategory(category.id)"
+                    >
+                      X
+                    </b-button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
             </div>
           </b-col>
           <b-col class="col-6">
