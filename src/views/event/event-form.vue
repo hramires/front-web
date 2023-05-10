@@ -228,6 +228,7 @@ export default {
                   <label for="startDateTime">Data de início</label>
                   <b-form-datepicker
                     id="startDateTime"
+                    :disabled="!isEditMode || !isCreateMode"
                     v-model="event.startDate"
                     placeholder="DD/MM/YYYY"
                     locale="pt"
@@ -238,6 +239,7 @@ export default {
                   <label for="startDateTime">Data de fim</label>
                   <b-form-datepicker
                     id="endtDateTime"
+                    :disabled="!isEditMode || !isCreateMode"
                     v-model="event.endDate"
                     placeholder="DD/MM/YYYY"
                     locale="pt"
