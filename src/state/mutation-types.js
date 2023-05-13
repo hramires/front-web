@@ -21,3 +21,10 @@ export const ADD_EVENTS = 'addEvents';
 export const UPDATE_EVENT = 'updateEvent';
 export const DELETE_EVENT = 'deleteEvent';
 export const SET_EVENT = 'setEvent';
+
+// regions
+export const ADD_REGIONS = 'addRegions';
+export const UPDATE_REGION = 'updateRegion';
+export const DELETE_REGION = 'deleteRegion';
+export const SET_REGION = 'setRegion';
+

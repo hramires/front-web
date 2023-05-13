@@ -7,6 +7,8 @@ import EventForm from '@views/event/event-form.vue';
 import EventList from '@views/event/event-list.vue';
 import RoadMapForm from '@views/roadmap/roadmap-form.vue';
 import RoadMapList from '@views/roadmap/roadmap-list.vue';
+import RegionForm from '@views/region/region-form.vue';
+import RegionList from '@views/region/region-list.vue';
 
 export default [
   {
@@ -61,6 +63,38 @@ export default [
       titleKey: 'Listar Locais',
     },
     component: PlaceList,
+  },
+  {
+    path: '/cadastrar-regiao',
+    name: 'cadastrar-regiao',
+    meta: {
+      titleKey: 'Cadastrar Regiões',
+    },
+    component: RegionForm,
+  },
+  {
+    path: '/editar-regiao/:id',
+    name: 'editar-regiao',
+    meta: {
+      titleKey: 'Editar Regiões',
+    },
+    component: RegionForm,
+  },
+  {
+    path: '/visualizar-regiao/:id',
+    name: 'visualizar-regiao',
+    meta: {
+      titleKey: 'Visualizar Regiões',
+    },
+    component: RegionForm,
+  },
+  {
+    path: '/listar-regiao',
+    name: 'listar-regiao',
+    meta: {
+      titleKey: 'Listar Regiões',
+    },
+    component: RegionList,
   },
   {
     path: '/cadastrar-evento',

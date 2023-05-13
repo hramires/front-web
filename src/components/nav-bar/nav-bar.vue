@@ -27,7 +27,7 @@ export default {
         },
         {
           name: 'Regiões',
-          routeName: 'regiao',
+          routeName: 'listar-regiao',
         },
         {
           name: 'Roteiros',
