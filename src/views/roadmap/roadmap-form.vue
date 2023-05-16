@@ -5,6 +5,7 @@ import {
   BFormGroup, BFormInput, BButton, BDropdown,
 } from 'bootstrap-vue';
 import DeleteModal from '@components/delete-modal';
+import ImageUploader from '@components/image-uploader';
 import cloneDeep from 'lodash/cloneDeep';
 
 export default {
@@ -18,6 +19,7 @@ export default {
     BButton,
     BDropdown,
     DeleteModal,
+    ImageUploader,
   },
   data() {
     return {
@@ -41,11 +43,11 @@ export default {
           name: 'Região 2',
         },
       ],
-      images: [
+      uploadedImages: [
         {
           id: 1,
           blank: true,
-          blankColor: '#000',
+          blankColor: '#d5e4cf',
           src: '',
         },
       ],
@@ -166,8 +168,10 @@ export default {
       }
       this.$router.push({ name: 'listar-roteiro' });
     },
+    handleImagesUpdate(images) {
+      this.uploadedImages = images;
+    },
     updatePlacesOrder() {
-      console.log(this.selectedPlacesIds);
       this.selectedPlacesIds = this.selectedPlaces.map((place) => place.id);
       this.selectedPlaces = this.selectedPlacesIds.map((placeId) => {
         const place = this.places.find((p) => p.id === placeId);
@@ -307,21 +311,12 @@ export default {
             description=""
             class="formLabel"
           >
-            <b-row :class="$style.images">
-              <b-img
-                v-for="image in images"
-                :key="`image-${image.id}`"
-                class="image rounded-lg m1"
-                :blank="image.blank"
-                :blankColor="image.blanckColor"
-                rounded alt="images">
-              </b-img>
-              <div
-                v-for="i in [2,3,4,5,6,7]"
-                :key="`image-${i}`"
-                class="image rounded m1">
-              </div>
-            </b-row>
+            <ImageUploader
+              :isEditMode="isEditMode || isCreateMode"
+              :inputImages="uploadedImages"
+              @update-images="handleImagesUpdate"
+            >
+            </ImageUploader>
           </b-form-group>
 
           <div v-if="roadmapId" class="d-flex justify-content-end mt-3">
@@ -368,9 +363,5 @@ iframe {
 .row {
   padding: 1.4rem 1.75rem;
   margin: 0;
-}
-
-.images {
-  padding: 0 1rem;
 }
 </style>
