@@ -50,6 +50,8 @@ export default {
       },
       selectedCategoriesIds: [],
       selectedCategories: [],
+      maxChars: 2040,
+      charsLeft: 2040,
       regions: [
         {
           id: 1,
@@ -89,6 +91,17 @@ export default {
       }
       return 'Selecione a Região';
     },
+    charactersLeft: {
+      get() {
+        if (this.place.description) {
+          return this.charsLeft - this.place.description.length;
+        }
+        return this.place.description;
+      },
+      set(value) {
+        this.charsLeft = value;
+      },
+    },
   },
   async created() {
     await this.fetchCategories();
@@ -127,6 +140,13 @@ export default {
           this.selectedCategoriesIds.push(categoryId);
           this.selectedCategories.push(selectedCategory);
         }
+      }
+    },
+    removeSelectedCategory(categoryId) {
+      const index = this.selectedCategoriesIds.indexOf(categoryId);
+      if (index > -1) {
+        this.selectedCategoriesIds.splice(index, 1);
+        this.selectedCategories.splice(index, 1);
       }
     },
     selectRegion(regionId) {
@@ -246,6 +266,7 @@ export default {
                 v-if="isEditMode || isCreateMode"
               ></b-form-textarea>
               <h5 v-else>{{ place.description}}</h5>
+              <span :class="$style['char-count']">{{ charactersLeft }} / 2040 caracteres</span>
             </b-form-group>
 
             <b-form-group
@@ -313,17 +334,41 @@ export default {
                 split-variant="outline-primary"
                 :disabled="!isEditMode && !isCreateMode"
               >
-                <b-dropdown-item
-                  v-for="category in categories"
-                  :key="`category-${category.id}`"
-                  @click="selectCategory(category.id)"
-                >{{  category.name }}</b-dropdown-item>
+              <b-dropdown-item
+                v-for="category in categories"
+                :key="`category-${category.id}`"
+                @click="selectCategory(category.id)"
+              >{{  category.name }}</b-dropdown-item>
               </b-dropdown>
-              <b-table
-                class="table mt-2"
-                striped
-                hover
-                :items="selectedCategories" />
+
+              <table v-if="!isLoading && selectedCategories" class="table mt-5" striped hover>
+                <thead>
+                <tr>
+                  <th class="text-dark-green">#</th>
+                  <th class="text-dark-green">Categoria</th>
+                  <th class="text-dark-green" v-if="isEditMode || isCreateMode">Ação</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr
+                  v-for="(category, index) in selectedCategories"
+                  :key="category.id"
+                  :class="{ 'table-secondary': index % 2 == 0, 'table-light': index % 2 != 0 }"
+                >
+                  <td>{{ category.id }}</td>
+                  <td>{{ category.name }}</td>
+                  <td v-if="isEditMode || isCreateMode">
+                    <b-button
+                      type="button"
+                      variant="danger"
+                      @click="removeSelectedCategory(category.id)"
+                    >
+                      X
+                    </b-button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
             </div>
           </b-col>
           <b-col class="col-6">
@@ -433,5 +478,11 @@ iframe {
 
 .images {
   padding: 0 1rem;
+}
+
+.char-count {
+  font-size: 0.8rem;
+  color: #999;
+  margin-top: 0.5rem;
 }
 </style>
