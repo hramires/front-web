@@ -1,23 +1,3 @@
-export default {
-props: {
-inputImages: {
-type: Array,
-},
-isEditMode: {
-type: Boolean,
-},
-},
-data() {
-return {
-// outras variáveis de dados, se necessário
-};
-},
-// ...
-};
-Aqui está o código corrigido do componente filho:
-
-javascript
-Copy code
 <script>
 export default {
   props: {

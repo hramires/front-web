@@ -1,5 +1,6 @@
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex';
+import draggable from 'vuedraggable';
 import {
   BFormGroup, BFormInput, BButton, BDropdown,
 } from 'bootstrap-vue';
@@ -12,6 +13,7 @@ export default {
     meta: [{ name: 'description', content: 'Cadastro Roteiro' }],
   },
   components: {
+    draggable,
     BFormGroup,
     BFormInput,
     BButton,
@@ -169,6 +171,16 @@ export default {
     handleImagesUpdate(images) {
       this.uploadedImages = images;
     },
+    updatePlacesOrder() {
+      this.selectedPlacesIds = this.selectedPlaces.map((place) => place.id);
+      this.selectedPlaces = this.selectedPlacesIds.map((placeId) => {
+        const place = this.places.find((p) => p.id === placeId);
+        return {
+          id: place.id,
+          name: place.name,
+        };
+      });
+    },
   },
 };
 </script>
@@ -268,11 +280,27 @@ export default {
                 @click="selectPlaces(place.id)"
               >{{  place.name }}</b-dropdown-item>
             </b-dropdown>
-            <b-table
-              class="table mt-2"
-              striped
-              hover
-              :items="selectedPlaces" />
+            <table class="table table-striped">
+              <thead>
+              <tr>
+                <th class="text-dark-green">Lugar</th>
+                <th class="text-dark-green" v-if="isEditMode || isCreateMode">Ordenar</th>
+              </tr>
+              </thead>
+              <draggable
+                :list="selectedPlaces"
+                :tag="'tbody'"
+                @input="updatePlacesOrder"
+              >
+                <tr v-for="(place, index) in selectedPlaces"
+                    :key="place.id"
+                    :class="{ 'table-secondary': index % 2 == 0, 'table-light': index % 2 != 0 }"
+                >
+                  <td>{{ place.name }}</td>
+                  <td class="handle">☰</td>
+                </tr>
+              </draggable>
+            </table>
           </div>
         </b-col>
         <b-col class="col-6">

@@ -9,6 +9,14 @@ export default {
       required: true,
     },
   },
+  computed: {
+    truncatedDescription() {
+      if (this.item.description.length > 150) {
+        return this.item.description.substring(0, 150) + '...';
+      }
+      return this.item.description;
+    },
+  },
   methods: {
     onClick() {
       this.$emit('click');
@@ -27,7 +35,7 @@ export default {
     tag="article"
     @click="onClick"
   >
-    <b-card-text>{{ item.description }}</b-card-text>
+    <b-card-text>{{ truncatedDescription }}</b-card-text>
     <div class="d-flex justify-content-between align-items-center" :class="$style.footer">
       <b-card-text :class="$style.updated">{{ item.lastUpdated }}</b-card-text>
     </div>
