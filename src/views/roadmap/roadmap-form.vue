@@ -21,6 +21,17 @@ export default {
     DeleteModal,
     ImageUploader,
   },
+  beforeRouteLeave(to, from, next) {
+    if (this.isCreateMode || this.isEditMode) {
+      if (confirm('Tem certeza que deseja sair? Os dados não salvos serão perdidos.')) {
+        next();
+      } else {
+        next(false);
+      }
+    } else {
+      next(); 
+    }
+  },
   data() {
     return {
       isLoading: false,
