@@ -71,14 +71,14 @@ export default {
     },
     createFilters() {
       const propertyNames = [
-        { key: 'name', name: 'Nomes' },
-        { key: 'description', name: 'Descrição' },
+        { key: 'region_id', name: 'Região' },
       ];
 
       const excludeProperties = [
         'id',
-        'region_id',
-        'photo_id',
+        'name',
+        'description',
+        'photos',
         'openingHour',
         'contact',
         'latitude',
@@ -86,6 +86,7 @@ export default {
         'createdAt',
         'updatedAt',
         'appointment',
+        'address',
       ];
 
       const filters = [];
@@ -137,5 +138,3 @@ export default {
     <add-button @click="onClickCreate"/>
   </div>
 </template>
-
-

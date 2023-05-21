@@ -33,6 +33,7 @@ export default {
   <div class="floating-menu-container">
     <b-button @click="showMenu = !showMenu" class="float-button">
       <b-icon icon="funnel-fill" style="color:#FFF" aria-hidden="true"></b-icon>
+      <p class="tooltip">Filtrar</p>
     </b-button>
     <transition name="slide">
       <div v-if="showMenu" class="menu-container">
@@ -68,26 +69,32 @@ export default {
   </div>
 </template>
 
-<style>
+<style lang="scss">
+
 .floating-menu-container {
-  position: relative;
-  right: -55px;
+  position: fixed;
+  float: top;
+  top: 110px;
+  right: 50px;
+  z-index: 100;
 }
 
 .float-button {
-  position: absolute;
   top: -13px;
   right: -13px;
   border-radius: 50%;
   width: 75px;
   height: 75px;
   z-index: 1000;
+  &:hover .tooltip{
+    opacity: 1;
+  }
 }
 
 .menu-container {
   position: absolute;
   top: 0;
-  right: 0;
+  right: 78px;
   width: 250px;
   z-index: 999;
   /*overflow-y: auto;*/

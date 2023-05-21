@@ -7,20 +7,6 @@ import GoogleMap from '@components/google-map';
 import DeleteModal from '@components/delete-modal';
 import cloneDeep from 'lodash/cloneDeep';
 
-// "id": 1,
-// "name": "Casa da Edição",
-// "region_id": 1,
-// "placeCategory_id": 1,
-// "photo_id": null,
-// "openingHour": null,
-// "contact": "+5551998231918",
-// "latitude": "55",
-// "longitude": "11",
-// "description": "Casa da edição nova",
-// "appointment": false,
-// "createdAt": "2023-04-09T23:12:44.116Z",
-// "updatedAt": "2023-04-09T23:12:44.116Z"
-
 export default {
   page: {
     meta: [{ name: 'description', content: 'Cadastro Local' }],
@@ -43,10 +29,11 @@ export default {
         contact: null,
         openingHour: null,
         appointment: null,
-        photo_id: null,
+        photos: null,
         region_id: null,
         latitude: null,
         longitude: null,
+        address: null,
       },
       selectedCategoriesIds: [],
       selectedCategories: [],
