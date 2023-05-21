@@ -145,7 +145,7 @@ h1 {
   background-color: $green;
 }
 
-.floatButton{
+.floatButton {
   border-radius: 50%;
   width: 75px;
   height: 75px;
@@ -158,6 +158,25 @@ h1 {
   z-index: 100;
   color: $light;
   font-size: 40px;
+  &:hover {
+    color: $light;
+    .tooltip {
+      opacity: 1;
+    }
+  }
+}
+
+.tooltip {
+  position: absolute;
+  float: left;
+  opacity: 0;
+  top: 80px;
+  background: $light-grey;
+  color: $dark;
+  border-radius: 5px;
+  padding: 0px 5px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 </style>
