@@ -1,4 +1,6 @@
 <script>
+import uploadImageToS3 from '@api/uploadImage';
+
 export default {
   props: {
     inputImages: {
@@ -10,14 +12,7 @@ export default {
   },
   data() {
     return {
-      localImages: this.inputImages || [
-        {
-          id: 1,
-          blank: true,
-          blankColor: '#d5e4cf',
-          src: '',
-        },
-      ],
+      localImages: this.inputImages,
     };
   },
   watch: {
@@ -57,18 +52,10 @@ export default {
             blankColor: null,
             src: e.target.result,
           };
-          if (this.localImages.length < 8) {
-            this.localImages.push({
-              id: this.localImages.length + 1,
-              blank: true,
-              blankColor: '#d5e4cf',
-              src: '',
-            });
-          } else {
-            this.localImages = [...this.localImages];
-          }
+          this.localImages = [...this.localImages];
         };
         reader.readAsDataURL(file);
+        console.log(uploadImageToS3(file));
         this.$emit('update-images', this.localImages);
       }
     },
