@@ -12,5 +12,8 @@ export default {
 </script>
 
 <template>
-  <b-button class="floatButton" @click="onClick">+</b-button>
+  <b-button class="floatButton" @click="onClick">
+    +
+    <p class="tooltip">Cadastrar</p>
+  </b-button>
 </template>
