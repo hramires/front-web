@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   entry: './src/main.js',
@@ -65,6 +66,10 @@ module.exports = {
 };
 
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+
+module.exports.plugins = ([
+  new Dotenv(),
+]);
 
 if (process.env.NODE_ENV === 'production') {
   module.exports.devtool = '#source-map';

@@ -2,8 +2,8 @@ import AWS from 'aws-sdk';
 
 // Configura as credenciais de acesso
 AWS.config.update({
-  accessKeyId: 'AKIAQNTVEQCNL3C7NJUZ',
-  secretAccessKey: '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',
+  accessKeyId: process.env.VUE_APP_AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.VUE_APP_AWS_SECRET_ACCESS_KEY,
 });
 
 // Cria uma instância do serviço S3
